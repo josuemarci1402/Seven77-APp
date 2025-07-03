@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEVEN77 - Gerenciamento de Alunos</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1976d2">
+    
+    <!-- Ícones e Fontes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === RESET E CONFIGURAÇÕES BÁSICAS === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        /* === NAVEGAÇÃO === */
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #1976d2;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1976d2;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+        }
+
+        /* === CONTAINER PRINCIPAL === */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* === DASHBOARD CARDS === */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-icon.blue { background: linear-gradient(45deg, #2196f3, #1976d2); }
+        .card-icon.green { background: linear-gradient(45deg, #4caf50, #388e3c); }
+        .card-icon.orange { background: linear-gradient(45deg, #ff9800, #f57c00); }
+        .card-icon.red { background: linear-gradient(45deg, #f44336, #d32f2f); }
+        .card-icon.purple { background: linear-gradient(45deg, #9c27b0, #7b1fa2); }
+        .card-icon.yellow { background: linear-gradient(45deg, #ffc107, #f57c00); }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 0.5rem;
+        }
+
+        /* === CONTROLES === */
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #1976d2, #2196f3);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #757575, #616161);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #f44336, #ef5350);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* === FILTROS RÁPIDOS === */
+        .quick-filters {
+            display: flex;
+            gap: 10px;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .quick-filter {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .quick-filter:hover, .quick-filter.active {
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        /* === TABELA === */
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: linear-gradient(45deg, #1976d2, #2196f3);
+            color: white;
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table th:first-child { border-radius: 8px 0 0 0; }
+        .table th:last-child { border-radius: 0 8px 0 0; }
+
+        .table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e1e5e9;
+            vertical-align: middle;
+        }
+
+        .table tr:hover {
+            background: rgba(25, 118, 210, 0.05);
+        }
+
+        /* === STATUS === */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .status-danger {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .badge-warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        /* === AÇÕES === */
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        .btn-whatsapp {
+            background: rgba(37, 211, 102, 0.1);
+            color: #25d366;
+        }
+
+        .btn-delete {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+
+        /* === MODAL === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #999;
+        }
+
+        /* === FLOATING BUTTON === */
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #1976d2, #2196f3);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(25, 118, 210, 0.4);
+        }
+
+        /* === TOAST === */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-left: 4px solid #4caf50;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideIn 0.3s forwards;
+        }
+
+        .toast.error {
+            border-left-color: #f44336;
+        }
+
+        .toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* === LOGIN === */
+        .login-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 1002;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container.active {
+            display: flex;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 3rem;
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .login-box h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .login-box .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .login-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 14px 20px;
+            margin-top: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            background: linear-gradient(45deg, #1976d2, #2196f3);
+            color: white;
+        }
+
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
+        }
+
+        .login-error {
+            color: #f44336;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* === DARK MODE === */
+        body.dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #eee;
+        }
+
+        body.dark .nav-bar {
+            background: rgba(20, 20, 35, 0.95);
+            border-bottom-color: #4a4a6a;
+        }
+
+        body.dark .logo {
+            color: #fff;
+        }
+
+        body.dark .nav-btn {
+            background: #4a4a6a;
+        }
+
+        body.dark .nav-btn:hover {
+            background: #5a5a7a;
+        }
+
+        body.dark .card,
+        body.dark .controls,
+        body.dark .table-container,
+        body.dark .modal-content {
+            background: rgba(30, 30, 50, 0.95);
+            border: 1px solid rgba(100,100,150,0.2);
+        }
+
+        body.dark .card-title,
+        body.dark .input-group label {
+            color: #bbb;
+        }
+
+        body.dark .card-value,
+        body.dark .modal-title {
+            color: #fff;
+        }
+
+        body.dark .form-input,
+        body.dark .form-select {
+            background: #2a2a4a;
+            color: #fff;
+            border-color: #4a4a6a;
+        }
+
+        body.dark .form-input:focus,
+        body.dark .form-select:focus {
+            border-color: #6a6a8a;
+            box-shadow: 0 0 0 3px rgba(106, 106, 138, 0.2);
+        }
+
+        body.dark .table {
+            color: #fff;
+        }
+
+        body.dark .table th {
+            background: linear-gradient(45deg, #4a4a6a, #5a5a7a);
+        }
+
+        body.dark .table td {
+            border-bottom-color: #4a4a6a;
+        }
+
+        body.dark .table tr:hover {
+            background: rgba(106, 106, 138, 0.1);
+        }
+
+        body.dark .quick-filter {
+            background: #2a2a4a;
+            color: #fff;
+            border-color: #4a4a6a;
+        }
+
+        body.dark .quick-filter:hover,
+        body.dark .quick-filter.active {
+            background: #5a5a7a;
+            border-color: #5a5a7a;
+        }
+
+        body.dark .close-btn:hover {
+            background: #3a3a5a;
+        }
+
+        body.dark .toast {
+            background: #2a2a4a;
+            color: #fff;
+        }
+
+        /* === RESPONSIVO === */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .nav-content {
+                padding: 0 1rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                justify-content: center;
+            }
+            
+            .quick-filters {
+                justify-content: center;
+            }
+            
+            .table-container {
+                padding: 1rem;
+            }
+            
+            .floating-btn {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Container -->
+    <div class="login-container active" id="loginContainer">
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            <h2>SEVEN77</h2>
+            <div class="input-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" placeholder="Digite seu usuário">
+            </div>
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" placeholder="Digite sua senha">
+            </div>
+            <button onclick="login()">Entrar</button>
+            <div class="login-error" id="loginError">Usuário ou senha incorretos!</div>
+        </div>
+    </div>
+
+    <!-- Navegação -->
+    <div class="nav-bar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>SEVEN77</span>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+                <button class="nav-btn" onclick="mostrarInfo()">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+                <button class="nav-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="container">
+        <!-- Dashboard Cards -->
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Total de Alunos</div>
+                        <div class="card-value" id="totalAlunos">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon green">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Ativos</div>
+                        <div class="card-value" id="ativosCount">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon orange">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Receita Mensal</div>
+                        <div class="card-value" id="receitaTotal">R$ 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon red">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Vencidos</div>
+                        <div class="card-value" id="vencidosCount">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon yellow">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Total de Indicações</div>
+                        <div class="card-value" id="indicacoesTotal">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon purple">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Taxa de Indicação</div>
+                        <div class="card-value" id="taxaIndicacao">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="controls">
+            <div class="controls-grid">
+                <div class="filters">
+                    <div class="input-group">
+                        <label for="filtroNome">Buscar Aluno</label>
+                        <input type="text" id="filtroNome" class="form-input" placeholder="Nome do aluno..." oninput="aplicarFiltros()">
+                    </div>
+                    <div class="input-group">
+                        <label for="filtroAcademia">Academia</label>
+                        <select id="filtroAcademia" class="form-select" onchange="aplicarFiltros()">
+                            <option value="">Todas</option>
+                            <option value="PRATIQUE">PRATIQUE</option>
+                            <option value="CONTORNO DO CORPO">CONTORNO DO CORPO</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="abrirModalAluno()">
+                        <i class="fas fa-plus"></i> Novo Aluno
+                    
+                    </button</button>
+                    <button class="btn btn-secondary" onclick="limparFiltros()">
+                        <i class="fas fa-times"></i> Limpar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros Rápidos -->
+            <div class="quick-filters">
+                <button class="quick-filter active" data-filter="todos" onclick="aplicarFiltroRapido('todos')">
+                    Todos
+                </button>
+                <button class="quick-filter" data-filter="pratique" onclick="aplicarFiltroRapido('pratique')">
+                    PRATIQUE
+                </button>
+                <button class="quick-filter" data-filter="contorno" onclick="aplicarFiltroRapido('contorno')">
+                    CONTORNO DO CORPO
+                </button>
+                <button class="quick-filter" data-filter="ativos" onclick="aplicarFiltroRapido('ativos')">
+                    Ativos
+                </button>
+                <button class="quick-filter" data-filter="vencidos" onclick="aplicarFiltroRapido('vencidos')">
+                    Vencidos
+                </button>
+                <button class="quick-filter" data-filter="indicadores" onclick="aplicarFiltroRapido('indicadores')">
+                    Indicadores
+                
+                    Indicadores
+</button>
+            </div>
+        </div>
+
+        <!-- Tabela -->
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Academia</th>
+                        <th>Valor</th>
+                        <th>Vencimento</th>
+                        <th>Status</th>
+                        <th>Indicou</th>
+                        <th>Qtde</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    <!-- Dados serão inseridos aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Aluno -->
+    <div class="modal" id="modalAluno">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">➕ Adicionar Aluno</h2>
+                <button class="close-btn" onclick="fecharModal('modalAluno')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="form-grid" onsubmit="event.preventDefault(); salvarAluno();">
+                <div class="input-group">
+                    <label for="nomeInput">Nome Completo *</label>
+                    <input type="text" id="nomeInput" class="form-input" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="telefoneInput">Telefone *</label>
+                    <input type="text" id="telefoneInput" class="form-input" required placeholder="+55 31 99999-9999">
+                </div>
+                
+                <div class="input-group">
+                    <label for="academiaInput">Academia *</label>
+                    <select id="academiaInput" class="form-select" required onchange="atualizarValorPadrao()">
+                        <option value="PRATIQUE">PRATIQUE</option>
+                        <option value="CONTORNO DO CORPO">CONTORNO DO CORPO</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="valorInput">Valor Mensalidade (R$) *</label>
+                    <input type="number" id="valorInput" class="form-input" step="0.01" required value="70.00">
+                </div>
+                
+                <div class="input-group">
+                    <label for="vencimentoInput">Data Vencimento *</label>
+                    <input type="date" id="vencimentoInput" class="form-input" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="statusInput">Status</label>
+                    <select id="statusInput" class="form-select">
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="indicouInput" onchange="toggleQtdeIndicacoes()">
+                    <label for="indicouInput">Indicou alguém?</label>
+                </div>
+                
+                <div class="input-group" id="qtdeIndicacoesGroup" style="display: none;">
+                    <label for="qtdeIndicacoesInput">Quantidade de Indicações</label>
+                    <input type="number" id="qtdeIndicacoesInput" class="form-input" value="0" min="0">
+                </div>
+                
+                <div class="btn-group" style="margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal('modalAluno')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Button -->
+    <button class="floating-btn" onclick="abrirModalAluno()" title="Adicionar Aluno">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ===== DADOS DOS ALUNOS (TODOS OS 50 DO EXCEL) =====
+        let alunos = [
+            { nome: "Raylanderson Maycon Souza e Silva", telefone: "+55 31 9816-2633", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-05-31", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Natal Maciel Pedroso Filho", telefone: "+55 31 9325-6212", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-05-31", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Eliane Lopes dos Reis", telefone: "+55 31 9325-6212", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-05-31", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Eduardo Daniel Gomes da Mota", telefone: "+55 31 9798-6973", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-05-31", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Raphael Artur Moreira e Silva", telefone: "+55 31 8609-1885", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-05-31", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Alex Junio Silva de Oliveira", telefone: "+55 31 9285-7128", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-01", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Vitor de Lima Fraga", telefone: "+55 31 9380-5587", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-01", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Luiza Rocha Siqueira", telefone: "+55 31 9380-5587", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-01", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Paulo Henrique Vieira dos Santos", telefone: "+55 31 7555-7083", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-01", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Arthur da Silva Simplicio", telefone: "+55 31 8443-5120", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-02", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Maria de Fátima Santos", telefone: "+55 31 8790-6146", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-03", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "David Da Conceição", telefone: "+55 31 8586-0191", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-03", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Natan Soares Ferreira", telefone: "+55 31 9372-1775", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-18", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Rayane", telefone: "+55 31 9760-9800", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-06", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "José Lucas Miranda de Barros", telefone: "+55 31 7519-6207", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-06", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Felipe Araujo Guerra", telefone: "+55 31 9313-6142", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-04", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Ana Carolina Vieira dos Santos", telefone: "+55 31 9188-3269", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-06", status: "ativo", indicou: true, qtdeIndicacoes: 1 },
+            { nome: "David Lorran Alves", telefone: "+55 31 9705-5116", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-09", status: "ativo", indicou: true, qtdeIndicacoes: 1 },
+            { nome: "Rodrigo Peterson", telefone: "+55 31 9652-6246", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-13", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Layla Carla Lopes da Silva", telefone: "+55 31 8796-6617", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-13", status: "inativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Marcelo Januário", telefone: "+55 31 8537-9582", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-13", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Gleidson Clesio", telefone: "+55 31 9816-2633", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-21", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Fernando Pereira Guerra", telefone: "+55 31 7568-6253", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-23", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Gabriel Henrique Lopes", telefone: "+55 31 9290-6703", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-23", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Daniela de Assis Silva", telefone: "+55 31 9421-6539", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-23", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Claudia Francislene de Souza Silva", telefone: "+55 31 9816-2633", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-24", status: "inativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Rosilene dos Santos Silva", telefone: "+55 31 9816-2633", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-24", status: "inativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Frederico Igor da Silva", telefone: "+55 31 8618-7718", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-05-27", status: "inativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Michelle Cristina de Lima", telefone: "+55 31 9380-5587", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-14", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Eduardo Daniel Gomes da Mota", telefone: "+55 31 9798-6973", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-05-29", status: "inativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Lucas de Oliveira Franco", telefone: "+55 31 8347-5008", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-06", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Jéssica da Silva Simplício Leal", telefone: "+55 31 8010-5747", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-06", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Mateus Afonso de Araújo", telefone: "+55 31 8534-9448", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-11", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Afonso Ferreira de Araújo", telefone: "+55 31 8534-9448", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-11", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Larissa Moraes Costa", telefone: "+55 31 9083-4278", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-12", status: "ativo", indicou: true, qtdeIndicacoes: 1 },
+            { nome: "Juliana Barboza", telefone: "+55 31 9820-0669", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-12", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Wederson Lisboa", telefone: "+55 31 9820-0669", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-12", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Fabíola Ketlen Lisboa Rossati", telefone: "+55 31 9831-9363", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-11", status: "ativo", indicou: true, qtdeIndicacoes: 1 },
+            { nome: "Karoline Alves Macedo Viterbo", telefone: "+55 31 9831-9363", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-11", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Emilly Vitória Alves Pimenta", telefone: "+55 31 9583-9125", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-11", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Thalita Keteli de Almeida", telefone: "+55 31 9519-7048", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-11", status: "ativo", indicou: true, qtdeIndicacoes: 1 },
+            { nome: "Bruna Ariane Lopes", telefone: "+55 31 9153-8681", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-11", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Talita Gomes Vieira Santos", telefone: "+55 31 8440-2928", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-15", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Michelle Caroline Oton", telefone: "+55 31 9823-1427", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-15", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Manuella Vales Vitkauskas", telefone: "+55 31 9960-0821", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-16", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "José Victor", telefone: "+55 31 8303-9961", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-14", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Marilda dos Santos Vieira Fiau", telefone: "+55 31 9731-2536", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-17", status: "ativo", indicou: true, qtdeIndicacoes: 1 },
+            { nome: "Maximo dos Santos Fiau", telefone: "+55 31 9533-3547", academia: "CONTORNO DO CORPO", valor: 80.00, vencimento: "2025-06-18", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Camila de Oliveira Mendes", telefone: "+55 31 8010-5747", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-19", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Wellington", telefone: "+55 31 8672-5131", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-20", status: "ativo", indicou: false, qtdeIndicacoes: 0 },
+            { nome: "Miguel Ângelo de Souza Almeida", telefone: "+55 31 9951-9704", academia: "PRATIQUE", valor: 70.00, vencimento: "2025-06-20", status: "ativo", indicou: false, qtdeIndicacoes: 0 }
+        ];
+
+        let alunosFiltrados = [...alunos];
+        let alunoEditando = null;
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Sistema SEVEN77 iniciado!');
+            
+            // Verificar login
+            const isLoggedIn = localStorage.getItem('seven77_logged');
+            if (!isLoggedIn) {
+                document.getElementById('loginContainer').classList.add('active');
+            } else {
+                document.getElementById('loginContainer').classList.remove('active');
+            }
+            
+            // Verificar Dark Mode salvo
+            const darkModeSaved = localStorage.getItem('seven77_darkmode');
+            if (darkModeSaved === 'true') {
+                document.body.classList.add('dark');
+                document.getElementById('darkModeIcon').classList.replace('fa-moon', 'fa-sun');
+            }
+            
+            carregarDados();
+            carregarTabela();
+            atualizarCards();
+        });
+
+        // ===== LOGIN =====
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'sv7' && password === '112') {
+                localStorage.setItem('seven77_logged', 'true');
+                document.getElementById('loginContainer').classList.remove('active');
+                mostrarToast('success', 'Bem-vindo!', 'Login realizado com sucesso');
+                
+                // Limpar campos
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('loginError').style.display = 'none';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                localStorage.removeItem('seven77_logged');
+                document.getElementById('loginContainer').classList.add('active');
+                mostrarToast('success', 'Logout', 'Você saiu do sistema');
+            }
+        }
+
+        // ===== GERENCIAMENTO DE DADOS =====
+        function carregarDados() {
+            const dadosSalvos = localStorage.getItem('alunos_seven77');
+            if (dadosSalvos) {
+                alunos = JSON.parse(dadosSalvos);
+                alunosFiltrados = [...alunos];
+                console.log('📂 Dados carregados:', alunos.length, 'alunos');
+            } else {
+                salvarDados();
+                console.log('💾 Dados iniciais salvos');
+            }
+        }
+
+        function salvarDados() {
+            localStorage.setItem('alunos_seven77', JSON.stringify(alunos));
+        }
+
+        // ===== INTERFACE =====
+        function atualizarCards() {
+            const totalAlunos = alunos.length;
+            const ativos = alunos.filter(a => a.status === 'ativo').length;
+            const vencidos = alunos.filter(a => verificarVencido(a.vencimento)).length;
+            const indicadores = alunos.filter(a => a.indicou).length;
+            const totalIndicacoes = alunos.reduce((total, a) => total + (a.qtdeIndicacoes || 0), 0);
+            const taxaIndicacao = totalAlunos > 0 ? ((indicadores / totalAlunos) * 100).toFixed(1) : 0;
+            
+            const receitaTotal = alunos
+                .filter(a => a.status === 'ativo')
+                .reduce((total, a) => total + (a.valor || 0), 0);
+
+            document.getElementById('totalAlunos').textContent = totalAlunos;
+            document.getElementById('ativosCount').textContent = ativos;
+            document.getElementById('vencidosCount').textContent = vencidos;
+            document.getElementById('indicacoesTotal').textContent = totalIndicacoes;
+            document.getElementById('taxaIndicacao').textContent = `${taxaIndicacao}%`;
+            document.getElementById('receitaTotal').textContent = `R$ ${receitaTotal.toFixed(2)}`;
+        }
+
+        function carregarTabela() {
+            const tbody = document.getElementById('corpoTabela');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (alunosFiltrados.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <h3>🔍 Nenhum aluno encontrado</h3>
+                                <p>Tente ajustar os filtros ou adicionar novos alunos</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            alunosFiltrados.forEach((aluno, index) => {
+                const vencido = verificarVencido(aluno.vencimento);
+                const statusColor = aluno.status === 'ativo' ? 'success' : 'danger';
+                const statusIcon = aluno.status === 'ativo' ? '✓' : '✗';
+                const indicouBadge = aluno.indicou ? 
+                    `<span class="badge badge-success">Sim</span>` : 
+                    `<span class="badge badge-warning">Não</span>`;
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${aluno.nome}</td>
+                    <td>
+                        <a href="https://wa.me/55${aluno.telefone.replace(/\D/g, '')}" target="_blank" style="color: #25D366; text-decoration: none;">
+                            ${aluno.telefone}
+                        </a>
+                    </td>
+                    <td>${aluno.academia}</td>
+                    <td>R$ ${(aluno.valor || 0).toFixed(2)}</td>
+                    <td style="color: ${vencido ? '#f44336' : '#333'}">
+                        ${formatarData(aluno.vencimento)}
+                        ${vencido ? ' ⚠️' : ''}
+                    </td>
+                    <td>
+                        <div class="status status-${statusColor}">
+                            ${statusIcon}
+                        </div>
+                    </td>
+                    <td>${indicouBadge}</td>
+                    <td>${aluno.qtdeIndicacoes || 0}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn-action btn-edit" onclick="editarAluno(${index})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp('${aluno.telefone}', '${aluno.nome}')" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="removerAluno(${index})" title="Remover">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ===== FILTROS =====
+        function aplicarFiltros() {
+            const nome = document.getElementById('filtroNome').value.toLowerCase();
+            const academia = document.getElementById('filtroAcademia').value;
+
+            alunosFiltrados = alunos.filter(aluno => {
+                const matchNome = nome === '' || aluno.nome.toLowerCase().includes(nome);
+                const matchAcademia = academia === '' || aluno.academia === academia;
+                
+                return matchNome && matchAcademia;
+            });
+
+            carregarTabela();
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtroNome').value = '';
+            document.getElementById('filtroAcademia').value = '';
+            
+            document.querySelectorAll('.quick-filter').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.quick-filter[data-filter="todos"]').classList.add('active');
+            
+            alunosFiltrados = [...alunos];
+            carregarTabela();
+        }
+
+        function aplicarFiltroRapido(filtro) {
+            document.querySelectorAll('.quick-filter').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-filter="${filtro}"]`).classList.add('active');
+            
+            switch(filtro) {
+                case 'todos':
+                    alunosFiltrados = [...alunos];
+                    break;
+                case 'pratique':
+                    alunosFiltrados = alunos.filter(a => a.academia === 'PRATIQUE');
+                    break;
+                case 'contorno':
+                    alunosFiltrados = alunos.filter(a => a.academia === 'CONTORNO DO CORPO');
+                    break;
+                case 'ativos':
+                    alunosFiltrados = alunos.filter(a => a.status === 'ativo');
+                    break;
+                case 'vencidos':
+                    alunosFiltrados = alunos.filter(a => verificarVencido(a.vencimento));
+                    break;
+                case 'indicadores':
+                    alunosFiltrados = alunos.filter(a => a.indicou);
+                    break;
+            }
+            
+            carregarTabela();
+        }
+
+        // ===== MODAL E CRUD =====
+        function abrirModalAluno() {
+            document.getElementById('modalTitle').textContent = '➕ Adicionar Aluno';
+            document.getElementById('nomeInput').value = '';
+            document.getElementById('telefoneInput').value = '';
+            document.getElementById('academiaInput').value = 'PRATIQUE';
+            document.getElementById('valorInput').value = '70.00';
+            document.getElementById('statusInput').value = 'ativo';
+            document.getElementById('vencimentoInput').value = '';
+            document.getElementById('indicouInput').checked = false;
+            document.getElementById('qtdeIndicacoesInput').value = '0';
+            document.getElementById('qtdeIndicacoesGroup').style.display = 'none';
+            
+            alunoEditando = null;
+            document.getElementById('modalAluno').classList.add('active');
+        }
+
+        function fecharModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function toggleQtdeIndicacoes() {
+            const checkbox = document.getElementById('indicouInput');
+            const qtdeGroup = document.getElementById('qtdeIndicacoesGroup');
+            
+            if (checkbox.checked) {
+                qtdeGroup.style.display = 'block';
+                document.getElementById('qtdeIndicacoesInput').value = '1';
+            } else {
+                qtdeGroup.style.display = 'none';
+                document.getElementById('qtdeIndicacoesInput').value = '0';
+            }
+        }
+
+        function atualizarValorPadrao() {
+            const academia = document.getElementById('academiaInput').value;
+            const valorInput = document.getElementById('valorInput');
+            
+            if (academia === 'PRATIQUE') {
+                valorInput.value = '70.00';
+            } else if (academia === 'CONTORNO DO CORPO') {
+                valorInput.value = '80.00';
+            }
+        }
+
+        function salvarAluno() {
+            const nome = document.getElementById('nomeInput').value.trim();
+            const telefone = document.getElementById('telefoneInput').value.trim();
+            const academia = document.getElementById('academiaInput').value;
+            const valor = parseFloat(document.getElementById('valorInput').value) || 0;
+            const status = document.getElementById('statusInput').value;
+            const vencimento = document.getElementById('vencimentoInput').value;
+            const indicou = document.getElementById('indicouInput').checked;
+            const qtdeIndicacoes = parseInt(document.getElementById('qtdeIndicacoesInput').value) || 0;
+
+            if (nome === '' || telefone === '' || vencimento === '') {
+                mostrarToast('error', 'Erro', 'Preencha todos os campos obrigatórios');
+                return;
+            }
+
+            const aluno = { nome, telefone, academia, valor, status, vencimento, indicou, qtdeIndicacoes };
+
+            if (alunoEditando !== null) {
+                alunos[alunoEditando] = aluno;
+                mostrarToast('success', 'Sucesso', 'Aluno atualizado com sucesso');
+            } else {
+                alunos.push(aluno);
+                mostrarToast('success', 'Sucesso', 'Aluno adicionado com sucesso');
+            }
+
+            salvarDados();
+            alunosFiltrados = [...alunos];
+            carregarTabela();
+            atualizarCards();
+            fecharModal('modalAluno');
+        }
+
+        function editarAluno(index) {
+            const aluno = alunosFiltrados[index];
+            const alunoIndex = alunos.findIndex(a => 
+                a.nome === aluno.nome && 
+                a.telefone === aluno.telefone && 
+                a.vencimento === aluno.vencimento
+            );
+
+            alunoEditando = alunoIndex;
+
+            document.getElementById('modalTitle').textContent = '✏️ Editar Aluno';
+            document.getElementById('nomeInput').value = aluno.nome;
+            document.getElementById('telefoneInput').value = aluno.telefone;
+            document.getElementById('academiaInput').value = aluno.academia;
+            document.getElementById('valorInput').value = aluno.valor || 0;
+            document.getElementById('statusInput').value = aluno.status;
+            document.getElementById('vencimentoInput').value = aluno.vencimento;
+            document.getElementById('indicouInput').checked = aluno.indicou || false;
+            document.getElementById('qtdeIndicacoesInput').value = aluno.qtdeIndicacoes || 0;
+            
+            if (aluno.indicou) {
+                document.getElementById('qtdeIndicacoesGroup').style.display = 'block';
+            }
+
+            document.getElementById('modalAluno').classList.add('active');
+        }
+
+        function removerAluno(index) {
+            const aluno = alunosFiltrados[index];
+            
+            if (confirm(`⚠️ Tem certeza que deseja remover ${aluno.nome}?`)) {
+                const alunoIndex = alunos.findIndex(a => 
+                    a.nome === aluno.nome && 
+                    a.telefone === aluno.telefone && 
+                    a.vencimento === aluno.vencimento
+                );
+
+                alunos.splice(alunoIndex, 1);
+                alunosFiltrados.splice(index, 1);
+
+                salvarDados();
+                carregarTabela();
+                atualizarCards();
+
+                mostrarToast('success', 'Sucesso', 'Aluno removido com sucesso');
+            }
+        }
+
+        // ===== UTILITÁRIOS =====
+        function formatarData(dataString) {
+            if (!dataString) return '';
+            const data = new Date(dataString + 'T00:00:00');
+            return data.toLocaleDateString('pt-BR');
+        }
+
+        function verificarVencido(dataString) {
+            if (!dataString) return false;
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            const dataVencimento = new Date(dataString + 'T00:00:00');
+            dataVencimento.setHours(0, 0, 0, 0);
+            return dataVencimento < hoje;
+        }
+
+        // ===== AÇÕES =====
+        function enviarWhatsApp(telefone, nome) {
+            const numero = telefone.replace(/\D/g, '');
+            const primeiroNome = nome.split(' ')[0];
+            const mensagem = encodeURIComponent(`Olá ${primeiroNome}, tudo bem? 
+
+🏋️ Sua mensalidade da academia está próxima do vencimento.
+
+💰 Para manter seu acesso, realize o pagamento:
+PIX: 31991639752
+
+Obrigado!
+Equipe SEVEN77 💪`);
+            
+            window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('darkModeIcon');
+            const isDark = document.body.classList.contains('dark');
+            
+            if (isDark) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+            
+            localStorage.setItem('seven77_darkmode', isDark);
+        }
+
+        function mostrarInfo() {
+            const totalReceita = alunos
+                .filter(a => a.status === 'ativo')
+                .reduce((total, a) => total + (a.valor || 0), 0);
+            
+            const totalIndicacoes = alunos.reduce((total, a) => total + (a.qtdeIndicacoes || 0), 0);
+            const indicadores = alunos.filter(a => a.indicou).length;
+                
+            alert(`🏋️ SEVEN77 - Sistema de Gerenciamento
+              
+📊 Estatísticas Gerais:
+• Total de alunos: ${alunos.length}
+• Alunos ativos: ${alunos.filter(a => a.status === 'ativo').length}
+• PRATIQUE: ${alunos.filter(a => a.academia === 'PRATIQUE').length} alunos (R$ 70,00)
+• CONTORNO DO CORPO: ${alunos.filter(a => a.academia === 'CONTORNO DO CORPO').length} alunos (R$ 80,00)
+• Receita mensal: R$ ${totalReceita.toFixed(2)}
+
+📈 Indicações:
+• Alunos que indicaram: ${indicadores}
+• Total de indicações: ${totalIndicacoes}
+• Taxa de indicação: ${((indicadores / alunos.length) * 100).toFixed(1)}%
+
+💡 Sistema v2.0 - Desenvolvido com ❤️`);
+        }
+
+        function mostrarToast(tipo, titulo, mensagem) {
+            const container = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 4px;">${titulo}</div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">${mensagem}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Adicionar evento Enter no login
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginContainer').classList.contains('active')) {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
