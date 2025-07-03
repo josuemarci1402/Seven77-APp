@@ -1234,7 +1234,9 @@
         function sendWhatsApp(phone, name, event) {
             event.stopPropagation();
             const cleanPhone = phone.replace(/\D/g, '');
-            const message = `Olá ${name}! 👋\n\nEspero que esteja bem! Vim verificar como está seu treino na academia SEVEN77. 💪\n\nAlgo que podemos ajudar?`;
+            const message = `⚠️ ATENÇÃO  ${name}! Pagamento em aberto Detectamos pendência no seu plano na Seven777.
+Evite bloqueio de acesso. Faça o pagamento via Pix:
+💰 31991639752`;
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
