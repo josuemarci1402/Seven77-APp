@@ -736,6 +736,24 @@
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
         }
 
+        .btn-delete {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
         /* Loading */
         .loading {
             position: fixed;
@@ -943,9 +961,14 @@
                     <input type="number" id="referralCount" min="0" value="0">
                 </div>
                 
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-save"></i> Salvar
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                    <button type="button" class="btn-delete" id="btnDelete" onclick="deleteStudent()" style="display: none;">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -956,8 +979,8 @@
     </div>
 
     <script>
-        // Dados dos alunos do Excel
-        let students = [
+        // Dados iniciais dos alunos do Excel
+        const initialStudents = [
             { id: 1, name: "Raylanderson maycon Souza e Silva", phone: "+55 31 9816-2633", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
             { id: 2, name: "Natal Maciel Pedroso filho", phone: "+55 31 9325-6212", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
             { id: 3, name: "Eliane Lopes dos reis", phone: "+55 31 9325-6212", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
@@ -1011,8 +1034,34 @@
             { id: 51, name: "Miguel Ângelo de Souza Almeida", phone: "+5531995197048", gym: "PRATIQUE", expiry: "2025-06-20", renewed: true, referred: false, referralCount: 0 }
         ];
 
+        // Variáveis globais
+        let students = [];
         let currentFilter = 'all';
         let editingId = null;
+
+        // Funções de armazenamento
+        function saveToLocalStorage() {
+            localStorage.setItem('seven77_students', JSON.stringify(students));
+            localStorage.setItem('seven77_lastUpdate', new Date().toISOString());
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('seven77_students');
+            if (saved) {
+                try {
+                    students = JSON.parse(saved);
+                    console.log('Dados carregados do localStorage:', students.length, 'alunos');
+                } catch (e) {
+                    console.error('Erro ao carregar dados:', e);
+                    students = [...initialStudents];
+                    saveToLocalStorage();
+                }
+            } else {
+                // Primeira vez - usa dados iniciais
+                students = [...initialStudents];
+                saveToLocalStorage();
+            }
+        }
 
         // Login
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -1023,6 +1072,7 @@
             if (username === 'sv7' && password === '112') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
+                loadFromLocalStorage();
                 loadStudents();
                 updateStats();
             } else {
@@ -1197,6 +1247,7 @@
                 newDate.setMonth(newDate.getMonth() + 1);
                 student.expiry = newDate.toISOString().split('T')[0];
                 student.renewed = true;
+                saveToLocalStorage();
                 loadStudents();
                 alert(`Matrícula de ${student.name} renovada com sucesso!`);
             }
@@ -1215,6 +1266,7 @@
                 document.getElementById('studentRenewed').checked = student.renewed;
                 document.getElementById('studentReferred').checked = student.referred;
                 document.getElementById('referralCount').value = student.referralCount;
+                document.getElementById('btnDelete').style.display = 'block';
                 
                 if (student.referred) {
                     document.getElementById('referralCountGroup').style.display = 'block';
@@ -1224,12 +1276,24 @@
             }
         }
 
+        // Delete Student
+        function deleteStudent() {
+            if (editingId && confirm('Tem certeza que deseja excluir este aluno?')) {
+                students = students.filter(s => s.id !== editingId);
+                saveToLocalStorage();
+                loadStudents();
+                closeModal();
+                alert('Aluno excluído com sucesso!');
+            }
+        }
+
         // Open Add Modal
         function openAddModal() {
             editingId = null;
             document.getElementById('modalTitle').textContent = 'Adicionar Aluno';
             document.getElementById('studentForm').reset();
             document.getElementById('referralCountGroup').style.display = 'none';
+            document.getElementById('btnDelete').style.display = 'none';
             openModal();
         }
 
@@ -1273,22 +1337,23 @@
                 }
             } else {
                 // Add new student
-                const newId = Math.max(...students.map(s => s.id)) + 1;
+                const newId = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
                 students.push({ id: newId, ...studentData });
             }
             
+            saveToLocalStorage();
             loadStudents();
             closeModal();
-            
-            // Save to localStorage
-            localStorage.setItem('students', JSON.stringify(students));
         });
 
-        // Load saved students from localStorage
-        const savedStudents = localStorage.getItem('students');
-        if (savedStudents) {
-            students = JSON.parse(savedStudents);
-        }
+        // Sincronização entre abas
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'seven77_students') {
+                loadFromLocalStorage();
+                loadStudents();
+                updateStats();
+            }
+        });
 
         // Initialize
         window.addEventListener('load', function() {
@@ -1296,6 +1361,7 @@
             if (window.location.hostname === 'localhost') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
+                loadFromLocalStorage();
                 loadStudents();
                 updateStats();
             }
