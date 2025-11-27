@@ -3,53 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SEVEN77 - Sistema Premium</title>
+    <title>SEVEN77 - Premium System</title>
     
-    <meta name="theme-color" content="#6366f1">
+    <meta name="theme-color" content="#1a1a2e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
-        /* --- ESTILOS GERAIS --- */
+        /* --- TEMA ANIMADO & CORES --- */
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1f2937;
-            --light: #f3f4f6;
-            --white: #ffffff;
-            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --bg-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
+            --text-muted: #e0e0e0;
+            --accent: #00ff88; /* Verde Neon */
+            --danger: #ff4757;
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--light);
-            color: var(--dark);
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite; /* Animação do Fundo */
+            color: var(--text-color);
+            min-height: 100vh;
             padding-bottom: 80px;
         }
 
-        /* --- CABEÇALHO --- */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- HEADER --- */
         .header {
-            background: var(--white);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
             padding: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .logo h2 { color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .logo h2 { 
+            font-weight: 800; 
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-sync {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-sync:hover { background: var(--accent); color: black; }
 
         /* --- DASHBOARD (STATS) --- */
         .stats-container {
@@ -60,17 +87,19 @@
         }
 
         .stat-card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: var(--shadow);
+            box-shadow: var(--card-shadow);
         }
 
-        .stat-value { font-size: 24px; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 12px; color: #6b7280; font-weight: 600; }
+        .stat-value { font-size: 26px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .stat-label { font-size: 11px; opacity: 0.8; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
-        /* --- LISTA DE ALUNOS --- */
+        /* --- LISTA --- */
         .alunos-container { padding: 0 20px; }
 
         .search-box {
@@ -80,106 +109,112 @@
 
         .search-box input {
             width: 100%;
-            padding: 15px 15px 15px 45px;
-            border-radius: 12px;
-            border: none;
-            background: var(--white);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 15px 15px 15px 50px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
             font-size: 16px;
+            backdrop-filter: blur(5px);
         }
-
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-        }
+        .search-box input::placeholder { color: rgba(255,255,255,0.5); }
+        .search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); }
 
         .aluno-card {
-            background: var(--white);
-            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
             padding: 20px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            border-left: 5px solid var(--primary);
-            transition: transform 0.2s;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .aluno-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.15); }
+
+        /* Barra lateral indicadora de status */
+        .status-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
         }
 
-        .aluno-card:active { transform: scale(0.98); }
-
-        .aluno-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .aluno-info h3 { font-size: 17px; margin-bottom: 4px; }
-        .aluno-info p { color: #6b7280; font-size: 14px; }
+        .aluno-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; padding-left: 10px; }
+        .aluno-info h3 { font-size: 18px; margin-bottom: 5px; font-weight: 600; }
+        .aluno-info p { font-size: 14px; opacity: 0.7; display: flex; align-items: center; gap: 5px; }
 
         .status-badge {
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 800;
             text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .status-ok { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .status-vencendo { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-        .status-vencido { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        /* Cores de Status - Neon */
+        .st-ok { background: #00ff88; color: #004422; box-shadow: 0 0 10px #00ff88; }
+        .st-warn { background: #ffcc00; color: #443300; box-shadow: 0 0 10px #ffcc00; }
+        .st-err { background: #ff4757; color: white; box-shadow: 0 0 10px #ff4757; }
 
         .aluno-actions {
             display: flex;
             gap: 10px;
-            border-top: 1px solid #f3f4f6;
-            padding-top: 15px;
+            margin-top: 15px;
+            padding-left: 10px;
         }
 
         .btn-action {
             flex: 1;
-            padding: 10px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 15px;
             border: none;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 8px;
             font-size: 14px;
+            transition: 0.2s;
         }
 
-        .btn-whatsapp { background: #dcfce7; color: #15803d; }
-        .btn-edit { background: #e0e7ff; color: #4338ca; }
-        .btn-delete { background: #fee2e2; color: #b91c1c; }
-
+        .btn-whatsapp { background: #25D366; color: white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
+        .btn-edit { background: rgba(255,255,255,0.2); color: white; }
+        
         /* --- FAB & MODAL --- */
         .fab {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            bottom: 25px;
+            right: 25px;
+            width: 65px;
+            height: 65px;
+            background: white;
+            color: #e73c7e;
             border-radius: 50%;
             border: none;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+            font-size: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             cursor: pointer;
             z-index: 99;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.2s;
         }
+        .fab:active { transform: scale(0.9); }
 
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -187,65 +222,70 @@
         }
 
         .modal-content {
-            background: white;
+            background: #1e1e2f;
             width: 100%;
             max-width: 400px;
-            border-radius: 20px;
-            padding: 25px;
-            animation: slideUp 0.3s ease;
+            border-radius: 25px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: zoomIn 0.3s ease;
         }
 
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; }
-        .form-group input {
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
+        .form-group input, .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
             font-size: 16px;
+            color: white;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 15px;
-            background: var(--primary);
+            padding: 16px;
+            background: linear-gradient(90deg, #e73c7e, #ee7752);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
             margin-top: 10px;
-        }
-        
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
+            box-shadow: 0 5px 20px rgba(231, 60, 126, 0.4);
         }
 
+        /* Toast Notification */
         .toast {
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: opacity 0.3s;
+            position: fixed;
+            top: 20px; left: 50%; transform: translateX(-50%);
+            background: white; color: black;
+            padding: 12px 30px; border-radius: 50px;
+            font-weight: 700; z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideDown 0.5s ease;
         }
+        @keyframes slideDown { from {top: -50px;} to {top: 20px;} }
+
+        /* Sync Area */
+        .sync-area { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .sync-btn { width: 48%; padding: 10px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
+        .sync-save { background: #00ff88; color: black; }
+        .sync-load { background: #23a6d5; color: white; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <div class="logo">
-            <h2><i class="fas fa-dumbbell"></i> SEVEN77</h2>
+            <h2><i class="fas fa-bolt" style="color: var(--accent)"></i> SEVEN77</h2>
         </div>
-        <div style="font-size: 12px; color: #6b7280;">Contorno do Corpo</div>
+        <button class="btn-sync" onclick="app.abrirModalSync()">
+            <i class="fas fa-sync"></i> Sincronizar
+        </button>
     </header>
 
     <div class="stats-container">
@@ -254,11 +294,11 @@
             <div class="stat-label">Total Alunos</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" id="receitaMensal">R$ 0</div>
-            <div class="stat-label">Receita Estimada</div>
+            <div class="stat-value" id="receitaMensal" style="color: var(--accent)">R$ 0</div>
+            <div class="stat-label">Faturamento</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" id="alunosAtivos" style="color: var(--success)">0</div>
+            <div class="stat-value" id="alunosAtivos">0</div>
             <div class="stat-label">Ativos</div>
         </div>
         <div class="stat-card">
@@ -270,7 +310,7 @@
     <div class="alunos-container">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Buscar aluno...">
+            <input type="text" id="searchInput" placeholder="Pesquisar aluno...">
         </div>
         <div id="alunosList"></div>
     </div>
@@ -282,8 +322,8 @@
     <div class="modal" id="modalAluno">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <h3 id="modalTitle">Novo Aluno</h3>
-                <i class="fas fa-times" onclick="app.fecharModal()" style="cursor: pointer; font-size: 20px;"></i>
+                <h3 id="modalTitle" style="color:white">Novo Aluno</h3>
+                <i class="fas fa-times" onclick="app.fecharModal()" style="cursor: pointer; font-size: 20px; color: white;"></i>
             </div>
             <form id="formAluno">
                 <div class="form-group">
@@ -299,17 +339,48 @@
                     <input type="date" id="inputVencimento" required>
                 </div>
                 <input type="hidden" id="inputValor" value="80">
-                <button type="submit" class="btn-submit">Salvar Aluno</button>
+                <button type="submit" class="btn-submit">SALVAR <i class="fas fa-check"></i></button>
+                
+                <button type="button" id="btnDelete" onclick="app.excluirAtual()" style="width: 100%; background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 10px; border-radius: 10px; margin-top: 15px; display: none;">
+                    Excluir Aluno
+                </button>
             </form>
         </div>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <div class="modal" id="modalSync">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <h3 style="color:white"><i class="fas fa-cloud"></i> Sincronização</h3>
+                <i class="fas fa-times" onclick="document.getElementById('modalSync').style.display='none'" style="cursor: pointer; font-size: 20px; color: white;"></i>
+            </div>
+            <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;">
+                Como não usamos servidor, para passar dados do PC pro Celular (ou vice-versa):
+                <br>1. Clique em <b>COPIAR CÓDIGO</b> no aparelho atual.
+                <br>2. Envie o código para você mesmo (WhatsApp/Email).
+                <br>3. No outro aparelho, cole em <b>COLAR CÓDIGO</b> e clique em Importar.
+            </p>
+            
+            <div class="form-group">
+                <label>Dados do Sistema (JSON)</label>
+                <textarea id="syncData" rows="5" placeholder="Cole o código aqui para importar..."></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: space-between;">
+                <button class="sync-btn sync-save" onclick="app.exportarDados()">
+                    <i class="fas fa-copy"></i> COPIAR CÓDIGO
+                </button>
+                <button class="sync-btn sync-load" onclick="app.importarDados()">
+                    <i class="fas fa-download"></i> IMPORTAR
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
         class ControleAlunos {
             constructor() {
-                // Lista baseada no PDF enviado em 27/11/2025
+                // LISTA ATUALIZADA (28 Alunos - Contorno)
                 this.initialStudents = [
                     { id: 1, nome: "Maria de Fátima Santos", telefone: "3187906146", vencimento: "2025-12-05", valor: 80 },
                     { id: 2, nome: "Rayane Cesario", telefone: "3197609800", vencimento: "2025-12-08", valor: 80 },
@@ -350,11 +421,9 @@
                 this.renderizar();
                 this.atualizarStats();
                 
-                // Event Listeners
                 document.getElementById('searchInput').addEventListener('input', () => this.renderizar());
                 document.getElementById('formAluno').addEventListener('submit', (e) => this.salvarAluno(e));
                 
-                // Formatação Telefone
                 document.getElementById('inputTelefone').addEventListener('input', (e) => {
                     let v = e.target.value.replace(/\D/g,'');
                     v = v.replace(/^(\d{2})(\d)/g,"($1) $2");
@@ -364,16 +433,14 @@
             }
 
             carregarAlunos() {
-                const saved = localStorage.getItem('seven77_v2');
+                const saved = localStorage.getItem('seven77_v3');
                 if (saved) return JSON.parse(saved);
-                
-                // Salvar lista inicial se for a primeira vez
-                localStorage.setItem('seven77_v2', JSON.stringify(this.initialStudents));
+                localStorage.setItem('seven77_v3', JSON.stringify(this.initialStudents));
                 return this.initialStudents;
             }
 
             salvarStorage() {
-                localStorage.setItem('seven77_v2', JSON.stringify(this.alunos));
+                localStorage.setItem('seven77_v3', JSON.stringify(this.alunos));
                 this.atualizarStats();
                 this.renderizar();
             }
@@ -387,35 +454,36 @@
 
                 filtrados.forEach(aluno => {
                     const dias = this.calcularDias(aluno.vencimento);
-                    let statusClass = 'status-ok';
-                    let statusText = 'Em dia';
+                    let statusClass = 'st-ok';
+                    let statusText = 'EM DIA';
+                    let indicatorColor = '#00ff88';
 
                     if (dias < 0) {
-                        statusClass = 'status-vencido';
-                        statusText = `Vencido há ${Math.abs(dias)} dias`;
+                        statusClass = 'st-err';
+                        statusText = 'VENCIDO';
+                        indicatorColor = '#ff4757';
                     } else if (dias <= 5) {
-                        statusClass = 'status-vencendo';
-                        statusText = `Vence em ${dias} dias`;
+                        statusClass = 'st-warn';
+                        statusText = 'VENCE LOGO';
+                        indicatorColor = '#ffcc00';
                     }
 
                     const html = `
-                        <div class="aluno-card" style="border-left-color: ${dias < 0 ? '#ef4444' : '#10b981'}">
+                        <div class="aluno-card">
+                            <div class="status-indicator" style="background: ${indicatorColor}"></div>
                             <div class="aluno-header">
                                 <div class="aluno-info">
                                     <h3>${aluno.nome}</h3>
-                                    <p><i class="fas fa-calendar-alt"></i> ${this.formatarData(aluno.vencimento)}</p>
+                                    <p><i class="far fa-clock"></i> ${this.formatarData(aluno.vencimento)}</p>
                                 </div>
                                 <span class="status-badge ${statusClass}">${statusText}</span>
                             </div>
                             <div class="aluno-actions">
                                 <button class="btn-action btn-whatsapp" onclick="app.enviarZap(${aluno.id})">
-                                    <i class="fab fa-whatsapp"></i> Cobrar
+                                    <i class="fab fa-whatsapp"></i> COBRAR
                                 </button>
                                 <button class="btn-action btn-edit" onclick="app.editar(${aluno.id})">
-                                    <i class="fas fa-edit"></i> Editar
-                                </button>
-                                <button class="btn-action btn-delete" onclick="app.excluir(${aluno.id})">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-pen"></i>
                                 </button>
                             </div>
                         </div>
@@ -424,12 +492,10 @@
                 });
             }
 
-            // --- LÓGICA DE NEGÓCIO ---
-
             calcularDias(data) {
                 const hoje = new Date();
                 hoje.setHours(0,0,0,0);
-                const venc = new Date(data + 'T00:00:00'); // Fix fuso horário
+                const venc = new Date(data + 'T00:00:00'); 
                 const diff = venc - hoje;
                 return Math.ceil(diff / (1000 * 60 * 60 * 24));
             }
@@ -450,14 +516,11 @@
                 document.getElementById('alunosVencidos').textContent = vencidos;
             }
 
-            // --- AÇÕES ---
-
             enviarZap(id) {
                 const aluno = this.alunos.find(a => a.id === id);
                 if (!aluno) return;
 
                 const phone = aluno.telefone.replace(/\D/g, '');
-                // Nova mensagem de cobrança focada na Contorno do Corpo
                 const msg = `Olá ${aluno.nome}, tudo bem? 🏋️‍♂️\n\nPassando para lembrar sobre a mensalidade da *Contorno do Corpo*.\n\nVencimento: *${this.formatarData(aluno.vencimento)}*\nValor: R$ ${aluno.valor},00\n\n💳 Chave Pix: 31991639752\n\nQualquer dúvida estou à disposição!`;
                 
                 window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -467,8 +530,8 @@
                 this.editandoId = null;
                 document.getElementById('modalTitle').textContent = "Novo Aluno";
                 document.getElementById('formAluno').reset();
+                document.getElementById('btnDelete').style.display = 'none';
                 
-                // Data padrão +30 dias
                 const hoje = new Date();
                 hoje.setDate(hoje.getDate() + 30);
                 document.getElementById('inputVencimento').value = hoje.toISOString().split('T')[0];
@@ -483,13 +546,23 @@
                 document.getElementById('inputNome').value = aluno.nome;
                 document.getElementById('inputTelefone').value = aluno.telefone;
                 document.getElementById('inputVencimento').value = aluno.vencimento;
+                document.getElementById('btnDelete').style.display = 'block';
                 document.getElementById('modalAluno').style.display = 'flex';
+            }
+
+            excluirAtual() {
+                if(this.editandoId && confirm('Deseja realmente remover este aluno?')) {
+                    this.alunos = this.alunos.filter(a => a.id !== this.editandoId);
+                    this.salvarStorage();
+                    this.fecharModal();
+                    this.mostrarToast('Aluno removido!');
+                }
             }
 
             salvarAluno(e) {
                 e.preventDefault();
                 const nome = document.getElementById('inputNome').value;
-                const telefone = document.getElementById('inputTelefone').value.replace(/\D/g, ''); // Salva apenas números
+                const telefone = document.getElementById('inputTelefone').value.replace(/\D/g, ''); 
                 const vencimento = document.getElementById('inputVencimento').value;
 
                 if (this.editandoId) {
@@ -506,14 +579,6 @@
                 this.salvarStorage();
             }
 
-            excluir(id) {
-                if(confirm('Deseja remover este aluno?')) {
-                    this.alunos = this.alunos.filter(a => a.id !== id);
-                    this.salvarStorage();
-                    this.mostrarToast('Aluno removido');
-                }
-            }
-
             fecharModal() {
                 document.getElementById('modalAluno').style.display = 'none';
             }
@@ -522,8 +587,45 @@
                 const toast = document.createElement('div');
                 toast.className = 'toast';
                 toast.textContent = msg;
-                document.getElementById('toastContainer').appendChild(toast);
+                document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 3000);
+            }
+
+            // --- SISTEMA DE SYNC ---
+            abrirModalSync() {
+                document.getElementById('modalSync').style.display = 'flex';
+                document.getElementById('syncData').value = '';
+            }
+
+            exportarDados() {
+                const json = JSON.stringify(this.alunos);
+                // Tenta copiar para o clipboard
+                navigator.clipboard.writeText(json).then(() => {
+                    this.mostrarToast('Código copiado! Cole no WhatsApp.');
+                    document.getElementById('syncData').value = json; // Mostra caso o usuário queira ver
+                }).catch(() => {
+                    document.getElementById('syncData').value = json;
+                    this.mostrarToast('Selecione e copie o texto abaixo.');
+                });
+            }
+
+            importarDados() {
+                try {
+                    const json = document.getElementById('syncData').value;
+                    if(!json) return alert('Cole o código primeiro!');
+                    
+                    const dadosNovos = JSON.parse(json);
+                    if(Array.isArray(dadosNovos)) {
+                        this.alunos = dadosNovos;
+                        this.salvarStorage();
+                        document.getElementById('modalSync').style.display = 'none';
+                        this.mostrarToast('Dados sincronizados com sucesso! 🚀');
+                    } else {
+                        alert('Código inválido!');
+                    }
+                } catch(e) {
+                    alert('Erro ao ler o código. Verifique se copiou tudo.');
+                }
             }
         }
 
