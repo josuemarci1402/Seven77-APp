@@ -5,32 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SEVEN77 - Sistema Premium</title>
     
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SEVEN77">
     
-    <!-- Service Worker -->
-    <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js');
-    }
-    </script>
-    
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        /* --- ESTILOS GERAIS --- */
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
@@ -42,1776 +25,509 @@
             --light: #f3f4f6;
             --white: #ffffff;
             --shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --radius: 16px;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--light);
             color: var(--dark);
-            overflow-x: hidden;
-            transition: all 0.3s ease;
-        }
-
-        body.dark-mode {
-            background: #111827;
-            color: var(--white);
-        }
-
-        body.dark-mode .card {
-            background: #1f2937;
-            border-color: #374151;
-        }
-
-        body.dark-mode .input-group input,
-        body.dark-mode .input-group select {
-            background: #374151;
-            color: var(--white);
-            border-color: #4b5563;
-        }
-
-        /* Login Screen */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 20px;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.6s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-logo i {
-            font-size: 60px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .login-logo h1 {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--dark);
-            margin: 0;
-        }
-
-        .login-logo p {
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .login-error {
-            background: #fee;
-            color: #c00;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 14px;
-            display: none;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
-        /* Main App */
-        .app-container {
-            display: none;
-            min-height: 100vh;
-            background: var(--light);
             padding-bottom: 80px;
         }
 
-        /* Header */
+        /* --- CABEÇALHO --- */
         .header {
             background: var(--white);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            padding: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: all 0.3s;
-        }
-
-        body.dark-mode .header {
-            background: #1f2937;
-        }
-
-        .header-content {
-            padding: 15px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .logo h2 { color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; }
 
-        .logo i {
-            font-size: 28px;
-            color: var(--primary);
-        }
-
-        .logo h2 {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary);
-            margin: 0;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .btn-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: none;
-            background: var(--light);
-            color: var(--dark);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            font-size: 20px;
-        }
-
-        body.dark-mode .btn-icon {
-            background: #374151;
-            color: var(--white);
-        }
-
-        .btn-icon:hover {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--white);
-            border-top: 1px solid #e5e7eb;
-            padding: 10px 0;
-            z-index: 100;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
-        }
-
-        body.dark-mode .bottom-nav {
-            background: #1f2937;
-            border-color: #374151;
-        }
-
-        .nav-tabs {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .nav-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #6b7280;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .nav-tab.active {
-            color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .nav-tab i {
-            font-size: 20px;
-        }
-
-        /* Content Pages */
-        .page {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Stats Cards */
+        /* --- DASHBOARD (STATS) --- */
         .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
+            padding: 20px;
         }
 
         .stat-card {
             background: var(--white);
-            border-radius: 16px;
             padding: 20px;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: all 0.3s;
+            box-shadow: var(--shadow);
         }
 
-        body.dark-mode .stat-card {
-            background: #1f2937;
-        }
+        .stat-value { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .stat-label { font-size: 12px; color: #6b7280; font-weight: 600; }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 24px;
-        }
-
-        .stat-icon.primary {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-        }
-
-        .stat-icon.success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .stat-icon.warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-
-        .stat-icon.danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--dark);
-            margin: 5px 0;
-        }
-
-        body.dark-mode .stat-value {
-            color: var(--white);
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        /* Search & Filters */
-        .search-section {
-            margin-bottom: 20px;
-        }
+        /* --- LISTA DE ALUNOS --- */
+        .alunos-container { padding: 0 20px; }
 
         .search-box {
+            margin-bottom: 20px;
             position: relative;
-            margin-bottom: 15px;
         }
 
         .search-box input {
             width: 100%;
-            padding: 16px 20px 16px 50px;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            font-size: 16px;
-            transition: all 0.3s;
+            padding: 15px 15px 15px 45px;
+            border-radius: 12px;
+            border: none;
             background: var(--white);
-        }
-
-        body.dark-mode .search-box input {
-            background: #374151;
-            border-color: #4b5563;
-            color: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-size: 16px;
         }
 
         .search-box i {
             position: absolute;
-            left: 20px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #9ca3af;
         }
 
-        .filter-tabs {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: none;
-        }
-
-        .filter-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-tab {
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: 2px solid #e5e7eb;
-            background: var(--white);
-            color: var(--dark);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-            font-size: 14px;
-        }
-
-        body.dark-mode .filter-tab {
-            background: #374151;
-            border-color: #4b5563;
-            color: var(--white);
-        }
-
-        .filter-tab.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Students List */
-        .student-card {
+        .aluno-card {
             background: var(--white);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            border-left: 5px solid var(--primary);
+            transition: transform 0.2s;
         }
 
-        body.dark-mode .student-card {
-            background: #1f2937;
-        }
+        .aluno-card:active { transform: scale(0.98); }
 
-        .student-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-        }
-
-        .student-header {
+        .aluno-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
+            align-items: flex-start;
             margin-bottom: 15px;
         }
 
-        .student-info h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--dark);
-            margin: 0 0 5px 0;
-        }
-
-        body.dark-mode .student-info h3 {
-            color: var(--white);
-        }
-
-        .student-info p {
-            color: #6b7280;
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .student-status {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
+        .aluno-info h3 { font-size: 17px; margin-bottom: 4px; }
+        .aluno-info p { color: #6b7280; font-size: 14px; }
 
         .status-badge {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .status-badge.active {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
+        .status-ok { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .status-vencendo { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .status-vencido { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
-        .status-badge.pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-
-        .status-badge.expired {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .student-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+        .aluno-actions {
+            display: flex;
             gap: 10px;
+            border-top: 1px solid #f3f4f6;
             padding-top: 15px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        body.dark-mode .student-details {
-            border-color: #374151;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .detail-item i {
-            color: var(--primary);
-            width: 20px;
-        }
-
-        .student-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
         }
 
         .btn-action {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
+            border-radius: 10px;
             border: none;
-            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-action.primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-action.success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        /* Export Page */
-        .export-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        body.dark-mode .export-card {
-            background: #1f2937;
-        }
-
-        .export-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        body.dark-mode .export-card h3 {
-            color: var(--white);
-        }
-
-        .export-card p {
-            color: #6b7280;
-            margin-bottom: 25px;
-            font-size: 16px;
-        }
-
-        .btn-export {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 0 10px;
-        }
-
-        .btn-export:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-        }
-
-        /* Revenue Page */
-        .revenue-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        body.dark-mode .revenue-card {
-            background: #1f2937;
-        }
-
-        .revenue-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        body.dark-mode .revenue-title {
-            color: var(--white);
-        }
-
-        .revenue-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .revenue-item {
-            text-align: center;
-            padding: 20px;
-            border-radius: 12px;
-            background: rgba(99, 102, 241, 0.05);
-            border: 2px solid rgba(99, 102, 241, 0.1);
-        }
-
-        .revenue-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .revenue-label {
+            gap: 5px;
             font-size: 14px;
-            color: #6b7280;
-            font-weight: 600;
         }
 
-        /* FAB */
+        .btn-whatsapp { background: #dcfce7; color: #15803d; }
+        .btn-edit { background: #e0e7ff; color: #4338ca; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; }
+
+        /* --- FAB & MODAL --- */
         .fab {
             position: fixed;
-            bottom: 90px;
+            bottom: 20px;
             right: 20px;
             width: 60px;
             height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
             border: none;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
             cursor: pointer;
+            z-index: 99;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            transition: all 0.3s;
-            z-index: 99;
         }
 
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Modal */
         .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
             display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
             padding: 20px;
         }
 
-        .modal.active {
-            display: flex;
-        }
-
         .modal-content {
-            background: var(--white);
-            border-radius: 24px;
-            padding: 30px;
+            background: white;
             width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: modalSlide 0.3s ease;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 25px;
+            animation: slideUp 0.3s ease;
         }
 
-        body.dark-mode .modal-content {
-            background: #1f2937;
-        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        @keyframes modalSlide {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-header h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--dark);
-            margin: 0;
-        }
-
-        body.dark-mode .modal-header h3 {
-            color: var(--white);
-        }
-
-        .btn-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            border: none;
-            background: var(--light);
-            color: var(--dark);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        body.dark-mode .btn-close {
-            background: #374151;
-            color: var(--white);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        body.dark-mode .form-group label {
-            color: var(--white);
-        }
-
-        .form-group input,
-        .form-group select {
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #374151; }
+        .form-group input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px;
             border: 2px solid #e5e7eb;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s;
-            background: var(--white);
-        }
-
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select {
-            background: #374151;
-            border-color: #4b5563;
-            color: var(--white);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        .checkbox-group {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 15px;
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
         }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-delete {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        .toast {
+            background: #333;
             color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-delete:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .student-details {
-                grid-template-columns: 1fr;
-            }
-            
-            .revenue-grid {
-                grid-template-columns: 1fr;
-            }
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: opacity 0.3s;
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-card">
-            <div class="login-logo">
-                <i class="fas fa-dumbbell"></i>
-                <h1>SEVEN77</h1>
-                <p>Sistema Premium de Gerenciamento</p>
-            </div>
-            
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="username">Usuário</label>
-                    <input type="text" id="username" placeholder="Digite seu usuário" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" placeholder="Digite sua senha" required>
-                </div>
-                
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-                
-                <div class="login-error" id="loginError">
-                    Usuário ou senha incorretos!
-                </div>
-            </form>
+
+    <header class="header">
+        <div class="logo">
+            <h2><i class="fas fa-dumbbell"></i> SEVEN77</h2>
+        </div>
+        <div style="font-size: 12px; color: #6b7280;">Contorno do Corpo</div>
+    </header>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value" id="totalAlunos">0</div>
+            <div class="stat-label">Total Alunos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="receitaMensal">R$ 0</div>
+            <div class="stat-label">Receita Estimada</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="alunosAtivos" style="color: var(--success)">0</div>
+            <div class="stat-label">Ativos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="alunosVencidos" style="color: var(--danger)">0</div>
+            <div class="stat-label">Vencidos</div>
         </div>
     </div>
 
-    <!-- Main App -->
-    <div class="app-container" id="appContainer">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-dumbbell"></i>
-                    <h2>SEVEN77</h2>
-                </div>
-                
-                <div class="header-actions">
-                    <button class="btn-icon" onclick="toggleDarkMode()">
-                        <i class="fas fa-moon" id="darkModeIcon"></i>
-                    </button>
-                    <button class="btn-icon" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Students Page -->
-        <div class="page active" id="studentsPage">
-            <!-- Stats -->
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-icon primary">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-value" id="totalStudents">0</div>
-                    <div class="stat-label">Total Alunos</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon success">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-value" id="activeStudents">0</div>
-                    <div class="stat-label">Ativos</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon warning">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="stat-value" id="totalReferrals">0</div>
-                    <div class="stat-label">Indicações</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon danger">
-                        <i class="fas fa-calendar-times"></i>
-                    </div>
-                    <div class="stat-value" id="expiredStudents">0</div>
-                    <div class="stat-label">Vencidos</div>
-                </div>
-            </div>
-
-            <!-- Search & Filters -->
-            <div class="search-section">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar aluno...">
-                </div>
-                
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="filterStudents('all')">Todos</button>
-                    <button class="filter-tab" onclick="filterStudents('active')">Ativos</button>
-                    <button class="filter-tab" onclick="filterStudents('expired')">Vencidos</button>
-                    <button class="filter-tab" onclick="filterStudents('referred')">Indicaram</button>
-                    <button class="filter-tab" onclick="filterStudents('renewed')">Renovaram</button>
-                </div>
-            </div>
-
-            <!-- Students List -->
-            <div id="studentsContainer">
-                <!-- Students will be loaded here -->
-            </div>
+    <div class="alunos-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Buscar aluno...">
         </div>
-
-        <!-- Export Page -->
-        <div class="page" id="exportPage">
-            <div class="export-card">
-                <i class="fas fa-file-excel" style="font-size: 60px; color: var(--success); margin-bottom: 20px;"></i>
-                <h3>Exportar Dados</h3>
-                <p>Baixe todos os dados dos alunos em formato Excel ou CSV</p>
-                <button class="btn-export" onclick="exportToExcel()">
-                    <i class="fas fa-file-excel"></i> Exportar Excel
-                </button>
-                <button class="btn-export" onclick="exportToCSV()">
-                    <i class="fas fa-file-csv"></i> Exportar CSV
-                </button>
-            </div>
-            
-            <div class="export-card">
-                <i class="fas fa-print" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
-                <h3>Relatório Completo</h3>
-                <p>Gere um relatório detalhado para impressão</p>
-                <button class="btn-export" onclick="generateReport()">
-                    <i class="fas fa-file-pdf"></i> Gerar Relatório
-                </button>
-            </div>
-        </div>
-
-        <!-- Revenue Page -->
-        <div class="page" id="revenuePage">
-            <div class="revenue-card">
-                <h3 class="revenue-title">
-                    <i class="fas fa-chart-line"></i>
-                    Receita Mensal
-                </h3>
-                <div class="revenue-grid">
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="pratiqueRevenue">R$ 0</div>
-                        <div class="revenue-label">PRATIQUE (R$ 70)</div>
-                    </div>
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="contornoRevenue">R$ 0</div>
-                        <div class="revenue-label">CONTORNO (R$ 80)</div>
-                    </div>
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="totalRevenue">R$ 0</div>
-                        <div class="revenue-label">TOTAL GERAL</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="revenue-card">
-                <h3 class="revenue-title">
-                    <i class="fas fa-chart-pie"></i>
-                    Análise por Academia
-                </h3>
-                <div class="revenue-grid">
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="pratiqueCount">0</div>
-                        <div class="revenue-label">Alunos PRATIQUE</div>
-                    </div>
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="contornoCount">0</div>
-                        <div class="revenue-label">Alunos CONTORNO</div>
-                    </div>
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="averageRevenue">R$ 0</div>
-                        <div class="revenue-label">Média por Aluno</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="revenue-card">
-                <h3 class="revenue-title">
-                    <i class="fas fa-calendar-alt"></i>
-                    Projeção Anual
-                </h3>
-                <div class="revenue-grid">
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="yearlyRevenue">R$ 0</div>
-                        <div class="revenue-label">Receita Anual</div>
-                    </div>
-                    <div class="revenue-item">
-                        <div class="revenue-value" id="monthlyGrowth">+0%</div>
-                        <div class="revenue-label">Crescimento</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- FAB -->
-        <button class="fab" onclick="openAddModal()">
-            <i class="fas fa-plus"></i>
-        </button>
-
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <div class="nav-tabs">
-                <div class="nav-tab active" onclick="showPage('students')">
-                    <i class="fas fa-users"></i>
-                    <span>Alunos</span>
-                </div>
-                <div class="nav-tab" onclick="showPage('export')">
-                    <i class="fas fa-download"></i>
-                    <span>Exportar</span>
-                </div>
-                <div class="nav-tab" onclick="showPage('revenue')">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span>Receita</span>
-                </div>
-            </div>
-        </div>
+        <div id="alunosList"></div>
     </div>
 
-    <!-- Student Modal -->
-    <div class="modal" id="studentModal">
+    <button class="fab" onclick="app.abrirModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <div class="modal" id="modalAluno">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Adicionar Aluno</h3>
-                <button class="btn-close" onclick="closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <h3 id="modalTitle">Novo Aluno</h3>
+                <i class="fas fa-times" onclick="app.fecharModal()" style="cursor: pointer; font-size: 20px;"></i>
             </div>
-            
-            <form id="studentForm">
+            <form id="formAluno">
                 <div class="form-group">
-                    <label for="studentName">Nome Completo</label>
-                    <input type="text" id="studentName" required>
+                    <label>Nome Completo</label>
+                    <input type="text" id="inputNome" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="studentPhone">Telefone</label>
-                    <input type="tel" id="studentPhone" required>
+                    <label>Telefone (WhatsApp)</label>
+                    <input type="tel" id="inputTelefone" placeholder="(31) 99999-9999" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="studentGym">Academia</label>
-                    <select id="studentGym" required>
-                        <option value="">Selecione...</option>
-                        <option value="PRATIQUE">PRATIQUE</option>
-                        <option value="CONTORNO DO CORPO">CONTORNO DO CORPO</option>
-                    </select>
+                    <label>Vencimento</label>
+                    <input type="date" id="inputVencimento" required>
                 </div>
-                
-                <div class="form-group">
-                    <label for="studentExpiry">Vencimento</label>
-                    <input type="date" id="studentExpiry" required>
-                </div>
-                
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="studentRenewed">
-                        <label for="studentRenewed">Renovou</label>
-                    </div>
-                    
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="studentReferred">
-                        <label for="studentReferred">Indicou</label>
-                    </div>
-                </div>
-                
-                <div class="form-group" id="referralCountGroup" style="display: none;">
-                    <label for="referralCount">Quantidade de Indicações</label>
-                    <input type="number" id="referralCount" min="0" value="0">
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn-submit">
-                        <i class="fas fa-save"></i> Salvar
-                    </button>
-                    <button type="button" class="btn-delete" id="btnDelete" onclick="deleteStudent()" style="display: none;">
-                        <i class="fas fa-trash"></i> Excluir
-                    </button>
-                </div>
+                <input type="hidden" id="inputValor" value="80">
+                <button type="submit" class="btn-submit">Salvar Aluno</button>
             </form>
         </div>
     </div>
+
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // Dados iniciais dos alunos do Excel
-        const initialStudents = [
-            { id: 1, name: "Raylanderson maycon Souza e Silva", phone: "+55 31 9816-2633", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
-            { id: 2, name: "Natal Maciel Pedroso filho", phone: "+55 31 9325-6212", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
-            { id: 3, name: "Eliane Lopes dos reis", phone: "+55 31 9325-6212", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
-            { id: 4, name: "Eduardo Daniel Gomes da Mota", phone: "+55 31 9798-6973", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
-            { id: 5, name: "Raphael Artur Moreira e Silva", phone: "+55 31 8609-1885", gym: "PRATIQUE", expiry: "2025-05-31", renewed: true, referred: false, referralCount: 0 },
-            { id: 6, name: "Alex junio silva de oliveira", phone: "+55 31 9285-7128", gym: "PRATIQUE", expiry: "2025-06-01", renewed: true, referred: false, referralCount: 0 },
-            { id: 7, name: "Vitor de Lima Fraga", phone: "+55 31 9380-5587", gym: "PRATIQUE", expiry: "2025-06-01", renewed: true, referred: false, referralCount: 0 },
-            { id: 8, name: "Luiza Rocha Siqueira", phone: "+55 31 9380-5587", gym: "PRATIQUE", expiry: "2025-06-01", renewed: true, referred: false, referralCount: 0 },
-            { id: 9, name: "Paulo Henrique Vieira dos Santos", phone: "+55 31 7555-7083", gym: "CONTORNO DO CORPO", expiry: "2025-06-01", renewed: true, referred: false, referralCount: 0 },
-            { id: 10, name: "Arthur da Silva simplicio", phone: "+55 31 8443-5120", gym: "PRATIQUE", expiry: "2025-06-02", renewed: true, referred: false, referralCount: 0 },
-            { id: 11, name: "Maria de Fátima Santos", phone: "+55 31 8790-6146", gym: "CONTORNO DO CORPO", expiry: "2025-06-03", renewed: true, referred: false, referralCount: 0 },
-            { id: 12, name: "David Da Conceição", phone: "+55 31 8586-0191", gym: "PRATIQUE", expiry: "2025-06-03", renewed: true, referred: false, referralCount: 0 },
-            { id: 13, name: "Natan Soares Ferreira", phone: "+55 31 9372-1775", gym: "PRATIQUE", expiry: "2025-06-18", renewed: true, referred: false, referralCount: 0 },
-            { id: 14, name: "Rayane", phone: "+55 31 9760-9800", gym: "CONTORNO DO CORPO", expiry: "2025-06-06", renewed: true, referred: false, referralCount: 0 },
-            { id: 15, name: "José Lucas Miranda de Barros", phone: "+55 31 7519-6207", gym: "CONTORNO DO CORPO", expiry: "2025-06-06", renewed: true, referred: false, referralCount: 0 },
-            { id: 16, name: "Felipe Araujo Guerra", phone: "+55 31 9313-6142", gym: "PRATIQUE", expiry: "2025-06-04", renewed: true, referred: false, referralCount: 0 },
-            { id: 17, name: "Ana Carolina Vieira dos Santos", phone: "+55 31 9188-3269", gym: "CONTORNO DO CORPO", expiry: "2025-06-06", renewed: true, referred: true, referralCount: 1 },
-            { id: 18, name: "David lorran Alves", phone: "+55 31 9705-5116", gym: "CONTORNO DO CORPO", expiry: "2025-06-09", renewed: true, referred: true, referralCount: 2 },
-            { id: 19, name: "Rodrigo Peterson", phone: "+55 31 9652-6246", gym: "CONTORNO DO CORPO", expiry: "2025-06-13", renewed: true, referred: false, referralCount: 0 },
-            { id: 20, name: "Layla Carla lopes da Silva", phone: "+55 31 8796-6617", gym: "PRATIQUE", expiry: "2025-06-13", renewed: false, referred: false, referralCount: 0 },
-            { id: 21, name: "Marcelo Januário", phone: "+55 31 8537-9582", gym: "PRATIQUE", expiry: "2025-06-13", renewed: true, referred: false, referralCount: 0 },
-            { id: 22, name: "Gleidson Clesio", phone: "+55 31 9816-2633", gym: "PRATIQUE", expiry: "2025-06-21", renewed: true, referred: false, referralCount: 0 },
-            { id: 23, name: "Fernando Pereira Guerra", phone: "+55 31 7568-6253", gym: "CONTORNO DO CORPO", expiry: "2025-06-23", renewed: true, referred: false, referralCount: 0 },
-            { id: 24, name: "Gabriel henrrique lopes", phone: "+55 31 9290-6703", gym: "PRATIQUE", expiry: "2025-06-23", renewed: true, referred: false, referralCount: 0 },
-            { id: 25, name: "Daniela de Assis Silva", phone: "+55 31 9421-6539", gym: "CONTORNO DO CORPO", expiry: "2025-06-23", renewed: true, referred: false, referralCount: 0 },
-            { id: 26, name: "Claudia francislene de Souza Silva", phone: "+55 31 9816-2633", gym: "PRATIQUE", expiry: "2025-06-24", renewed: false, referred: false, referralCount: 0 },
-            { id: 27, name: "Rosilene dos Santos Silva", phone: "+55 31 9816-2633", gym: "PRATIQUE", expiry: "2025-06-24", renewed: false, referred: false, referralCount: 0 },
-            { id: 28, name: "FREDERICO IGOR DA SILVA", phone: "+55 31 8618-7718", gym: "CONTORNO DO CORPO", expiry: "2025-05-27", renewed: false, referred: false, referralCount: 0 },
-            { id: 29, name: "Michelle Cristina de Lima", phone: "+55 31 9380-5587", gym: "PRATIQUE", expiry: "2025-06-14", renewed: true, referred: false, referralCount: 0 },
-            { id: 30, name: "EDUARDO DANIEL GOMES DA MOTA", phone: "+55 31 9798-6973", gym: "PRATIQUE", expiry: "2025-05-29", renewed: false, referred: false, referralCount: 0 },
-            { id: 31, name: "Lucas de Oliveira Franco", phone: "+55 31 8347-5008", gym: "PRATIQUE", expiry: "2025-06-06", renewed: true, referred: false, referralCount: 0 },
-            { id: 32, name: "Jéssica da Silva Simplício Leal", phone: "+55 31 8010-5747", gym: "PRATIQUE", expiry: "2025-06-06", renewed: true, referred: false, referralCount: 0 },
-            { id: 33, name: "Mateus Afonso de Araújo", phone: "+55 31 8534-9448", gym: "PRATIQUE", expiry: "2025-06-11", renewed: true, referred: false, referralCount: 0 },
-            { id: 34, name: "Afonso ferreira de Araújo", phone: "+55 31 8534-9448", gym: "PRATIQUE", expiry: "2025-06-11", renewed: true, referred: false, referralCount: 0 },
-            { id: 35, name: "Larissa Moraes Costa", phone: "+55 31 9083-4278", gym: "CONTORNO DO CORPO", expiry: "2025-06-12", renewed: true, referred: true, referralCount: 1 },
-            { id: 36, name: "Juliana Barboza", phone: "+5531982006692", gym: "CONTORNO DO CORPO", expiry: "2025-06-12", renewed: true, referred: false, referralCount: 0 },
-            { id: 37, name: "Wederson Lisboa", phone: "31982006692", gym: "CONTORNO DO CORPO", expiry: "2025-06-12", renewed: true, referred: false, referralCount: 0 },
-            { id: 38, name: "Fabíola Ketlen Lisboa Rossati", phone: "31983193639", gym: "CONTORNO DO CORPO", expiry: "2025-06-11", renewed: true, referred: true, referralCount: 1 },
-            { id: 39, name: "KAROLINE ALVES MACEDO VITERBO", phone: "+5531983193639", gym: "PRATIQUE", expiry: "2025-06-11", renewed: true, referred: false, referralCount: 0 },
-            { id: 40, name: "Emilly Vitória Alves Pimenta", phone: "+55 31 9583-9125", gym: "PRATIQUE", expiry: "2025-06-11", renewed: true, referred: false, referralCount: 0 },
-            { id: 41, name: "Thalita keteli de Almeida", phone: "+55 31 9519-7048", gym: "PRATIQUE", expiry: "2025-06-11", renewed: true, referred: true, referralCount: 3 },
-            { id: 42, name: "Bruna ariane lopes", phone: "+55 31 9153-8681", gym: "PRATIQUE", expiry: "2025-06-11", renewed: true, referred: false, referralCount: 0 },
-            { id: 43, name: "Talita Gomes Vieira Santos", phone: "+55 31 8440-2928", gym: "PRATIQUE", expiry: "2025-06-15", renewed: true, referred: false, referralCount: 0 },
-            { id: 44, name: "Michelle Caroline Oton", phone: "+5531982314279", gym: "CONTORNO DO CORPO", expiry: "2025-06-15", renewed: true, referred: false, referralCount: 0 },
-            { id: 45, name: "Manuella vales Vitkauskas", phone: "+5531996008218", gym: "CONTORNO DO CORPO", expiry: "2025-06-16", renewed: true, referred: false, referralCount: 0 },
-            { id: 46, name: "JOSE VICTOR", phone: "+55 31 8303-9961", gym: "CONTORNO DO CORPO", expiry: "2025-06-14", renewed: true, referred: false, referralCount: 0 },
-            { id: 47, name: "Marilda dos Santos Vieira Fiau", phone: "+5531973125369", gym: "CONTORNO DO CORPO", expiry: "2025-06-17", renewed: true, referred: true, referralCount: 1 },
-            { id: 48, name: "Maximo dos santos fiau", phone: "+55 31 9533-3547", gym: "CONTORNO DO CORPO", expiry: "2025-06-18", renewed: true, referred: false, referralCount: 0 },
-            { id: 49, name: "Camila de Oliveira Mendes", phone: "+55 31 8010-5747", gym: "PRATIQUE", expiry: "2025-06-19", renewed: true, referred: false, referralCount: 0 },
-            { id: 50, name: "Wellington", phone: "+55 31 8672-5131", gym: "PRATIQUE", expiry: "2025-06-20", renewed: true, referred: false, referralCount: 0 },
-            { id: 51, name: "Miguel Ângelo de Souza Almeida", phone: "+5531995197048", gym: "PRATIQUE", expiry: "2025-06-20", renewed: true, referred: false, referralCount: 0 }
-        ];
+        class ControleAlunos {
+            constructor() {
+                // Lista baseada no PDF enviado em 27/11/2025
+                this.initialStudents = [
+                    { id: 1, nome: "Maria de Fátima Santos", telefone: "3187906146", vencimento: "2025-12-05", valor: 80 },
+                    { id: 2, nome: "Rayane Cesario", telefone: "3197609800", vencimento: "2025-12-08", valor: 80 },
+                    { id: 3, nome: "Ana Carolina Vieira dos Santos", telefone: "3191883269", vencimento: "2025-12-08", valor: 80 },
+                    { id: 4, nome: "David Lorran Alves", telefone: "3197055116", vencimento: "2025-12-06", valor: 80 },
+                    { id: 5, nome: "Michelle Caroline Otoni", telefone: "31982314279", vencimento: "2025-12-17", valor: 80 },
+                    { id: 6, nome: "JOSE VICTOR ALMEIDA", telefone: "3183039961", vencimento: "2025-12-20", valor: 80 },
+                    { id: 7, nome: "Maximo dos Santos Fiau", telefone: "3195333547", vencimento: "2025-12-21", valor: 80 },
+                    { id: 8, nome: "Lazaro Silva", telefone: "3195280109", vencimento: "2025-12-06", valor: 80 },
+                    { id: 9, nome: "Felipe", telefone: "31993579390", vencimento: "2025-12-10", valor: 80 },
+                    { id: 10, nome: "Wagner", telefone: "3199669339", vencimento: "2025-12-23", valor: 80 },
+                    { id: 11, nome: "Daniel Pereira", telefone: "31999651865", vencimento: "2025-12-03", valor: 80 },
+                    { id: 12, nome: "Michel", telefone: "31985505591", vencimento: "2025-12-06", valor: 80 },
+                    { id: 13, nome: "Lorena Da Costa Duarte", telefone: "31982024030", vencimento: "2025-12-05", valor: 80 },
+                    { id: 14, nome: "Marcos Vinicius", telefone: "31982024030", vencimento: "2025-12-05", valor: 80 },
+                    { id: 15, nome: "Josué Thiago", telefone: "31975985825", vencimento: "2025-11-28", valor: 80 },
+                    { id: 16, nome: "Letícia Beatriz", telefone: "31988669697", vencimento: "2025-12-17", valor: 80 },
+                    { id: 17, nome: "Andressa Vasconcellos", telefone: "31989165809", vencimento: "2025-12-21", valor: 80 },
+                    { id: 18, nome: "Maria Luísa", telefone: "31982246425", vencimento: "2025-11-30", valor: 80 },
+                    { id: 19, nome: "Lucas Rafael", telefone: "31982246425", vencimento: "2025-11-30", valor: 80 },
+                    { id: 20, nome: "Luiz Fernando Fernandes", telefone: "31984689170", vencimento: "2025-11-28", valor: 80 },
+                    { id: 21, nome: "Victor", telefone: "31992854862", vencimento: "2025-12-09", valor: 80 },
+                    { id: 22, nome: "Eduardo", telefone: "31988025045", vencimento: "2025-12-03", valor: 80 },
+                    { id: 23, nome: "Josiane Kênia", telefone: "31988025045", vencimento: "2025-12-04", valor: 80 },
+                    { id: 24, nome: "Gabriela Doris Vieira Marçal", telefone: "31999651865", vencimento: "2025-12-07", valor: 80 },
+                    { id: 25, nome: "Priscila Lopes de Souza", telefone: "31987301138", vencimento: "2025-12-06", valor: 80 },
+                    { id: 26, nome: "Raiane Fernades", telefone: "31989861378", vencimento: "2025-12-25", valor: 80 },
+                    { id: 27, nome: "Helen Cristina", telefone: "31991329073", vencimento: "2025-12-26", valor: 80 },
+                    { id: 28, nome: "Gláucia Valéria", telefone: "31988689590", vencimento: "2025-12-09", valor: 80 }
+                ];
 
-        // Variáveis globais
-        let students = [];
-        let currentFilter = 'all';
-        let editingId = null;
-        let currentPage = 'students';
+                this.alunos = this.carregarAlunos();
+                this.editandoId = null;
+                this.init();
+            }
 
-        // Funções de armazenamento
-        function saveToLocalStorage() {
-            localStorage.setItem('seven77_students', JSON.stringify(students));
-            localStorage.setItem('seven77_lastUpdate', new Date().toISOString());
-        }
+            init() {
+                this.renderizar();
+                this.atualizarStats();
+                
+                // Event Listeners
+                document.getElementById('searchInput').addEventListener('input', () => this.renderizar());
+                document.getElementById('formAluno').addEventListener('submit', (e) => this.salvarAluno(e));
+                
+                // Formatação Telefone
+                document.getElementById('inputTelefone').addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g,'');
+                    v = v.replace(/^(\d{2})(\d)/g,"($1) $2");
+                    v = v.replace(/(\d)(\d{4})$/,"$1-$2");
+                    e.target.value = v;
+                });
+            }
 
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('seven77_students');
-            if (saved) {
-                try {
-                    students = JSON.parse(saved);
-                    console.log('Dados carregados do localStorage:', students.length, 'alunos');
-                } catch (e) {
-                    console.error('Erro ao carregar dados:', e);
-                    students = [...initialStudents];
-                    saveToLocalStorage();
+            carregarAlunos() {
+                const saved = localStorage.getItem('seven77_v2');
+                if (saved) return JSON.parse(saved);
+                
+                // Salvar lista inicial se for a primeira vez
+                localStorage.setItem('seven77_v2', JSON.stringify(this.initialStudents));
+                return this.initialStudents;
+            }
+
+            salvarStorage() {
+                localStorage.setItem('seven77_v2', JSON.stringify(this.alunos));
+                this.atualizarStats();
+                this.renderizar();
+            }
+
+            renderizar() {
+                const termo = document.getElementById('searchInput').value.toLowerCase();
+                const container = document.getElementById('alunosList');
+                container.innerHTML = '';
+
+                const filtrados = this.alunos.filter(a => a.nome.toLowerCase().includes(termo));
+
+                filtrados.forEach(aluno => {
+                    const dias = this.calcularDias(aluno.vencimento);
+                    let statusClass = 'status-ok';
+                    let statusText = 'Em dia';
+
+                    if (dias < 0) {
+                        statusClass = 'status-vencido';
+                        statusText = `Vencido há ${Math.abs(dias)} dias`;
+                    } else if (dias <= 5) {
+                        statusClass = 'status-vencendo';
+                        statusText = `Vence em ${dias} dias`;
+                    }
+
+                    const html = `
+                        <div class="aluno-card" style="border-left-color: ${dias < 0 ? '#ef4444' : '#10b981'}">
+                            <div class="aluno-header">
+                                <div class="aluno-info">
+                                    <h3>${aluno.nome}</h3>
+                                    <p><i class="fas fa-calendar-alt"></i> ${this.formatarData(aluno.vencimento)}</p>
+                                </div>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="aluno-actions">
+                                <button class="btn-action btn-whatsapp" onclick="app.enviarZap(${aluno.id})">
+                                    <i class="fab fa-whatsapp"></i> Cobrar
+                                </button>
+                                <button class="btn-action btn-edit" onclick="app.editar(${aluno.id})">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn-action btn-delete" onclick="app.excluir(${aluno.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            }
+
+            // --- LÓGICA DE NEGÓCIO ---
+
+            calcularDias(data) {
+                const hoje = new Date();
+                hoje.setHours(0,0,0,0);
+                const venc = new Date(data + 'T00:00:00'); // Fix fuso horário
+                const diff = venc - hoje;
+                return Math.ceil(diff / (1000 * 60 * 60 * 24));
+            }
+
+            formatarData(data) {
+                const [ano, mes, dia] = data.split('-');
+                return `${dia}/${mes}/${ano}`;
+            }
+
+            atualizarStats() {
+                const total = this.alunos.length;
+                const receita = total * 80;
+                const vencidos = this.alunos.filter(a => this.calcularDias(a.vencimento) < 0).length;
+
+                document.getElementById('totalAlunos').textContent = total;
+                document.getElementById('receitaMensal').textContent = `R$ ${receita.toLocaleString('pt-BR')}`;
+                document.getElementById('alunosAtivos').textContent = total - vencidos;
+                document.getElementById('alunosVencidos').textContent = vencidos;
+            }
+
+            // --- AÇÕES ---
+
+            enviarZap(id) {
+                const aluno = this.alunos.find(a => a.id === id);
+                if (!aluno) return;
+
+                const phone = aluno.telefone.replace(/\D/g, '');
+                // Nova mensagem de cobrança focada na Contorno do Corpo
+                const msg = `Olá ${aluno.nome}, tudo bem? 🏋️‍♂️\n\nPassando para lembrar sobre a mensalidade da *Contorno do Corpo*.\n\nVencimento: *${this.formatarData(aluno.vencimento)}*\nValor: R$ ${aluno.valor},00\n\n💳 Chave Pix: 31991639752\n\nQualquer dúvida estou à disposição!`;
+                
+                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            }
+
+            abrirModal() {
+                this.editandoId = null;
+                document.getElementById('modalTitle').textContent = "Novo Aluno";
+                document.getElementById('formAluno').reset();
+                
+                // Data padrão +30 dias
+                const hoje = new Date();
+                hoje.setDate(hoje.getDate() + 30);
+                document.getElementById('inputVencimento').value = hoje.toISOString().split('T')[0];
+                
+                document.getElementById('modalAluno').style.display = 'flex';
+            }
+
+            editar(id) {
+                const aluno = this.alunos.find(a => a.id === id);
+                this.editandoId = id;
+                document.getElementById('modalTitle').textContent = "Editar Aluno";
+                document.getElementById('inputNome').value = aluno.nome;
+                document.getElementById('inputTelefone').value = aluno.telefone;
+                document.getElementById('inputVencimento').value = aluno.vencimento;
+                document.getElementById('modalAluno').style.display = 'flex';
+            }
+
+            salvarAluno(e) {
+                e.preventDefault();
+                const nome = document.getElementById('inputNome').value;
+                const telefone = document.getElementById('inputTelefone').value.replace(/\D/g, ''); // Salva apenas números
+                const vencimento = document.getElementById('inputVencimento').value;
+
+                if (this.editandoId) {
+                    const idx = this.alunos.findIndex(a => a.id === this.editandoId);
+                    this.alunos[idx] = { ...this.alunos[idx], nome, telefone, vencimento };
+                    this.mostrarToast('Aluno atualizado!');
+                } else {
+                    const id = Date.now();
+                    this.alunos.push({ id, nome, telefone, vencimento, valor: 80 });
+                    this.mostrarToast('Aluno cadastrado!');
                 }
-            } else {
-                students = [...initialStudents];
-                saveToLocalStorage();
+
+                this.fecharModal();
+                this.salvarStorage();
             }
-        }
 
-        // Navigation
-        function showPage(page) {
-            currentPage = page;
-            
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            
-            // Show selected page
-            document.getElementById(page + 'Page').classList.add('active');
-            document.querySelector(`.nav-tab[onclick="showPage('${page}')"]`).classList.add('active');
-            
-            // Update content based on page
-            if (page === 'students') {
-                loadStudents();
-            } else if (page === 'revenue') {
-                updateRevenueStats();
-            }
-        }
-
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === 'sv7' && password === '112') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'block';
-                loadFromLocalStorage();
-                loadStudents();
-                updateStats();
-                updateRevenueStats();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('loginError').style.display = 'none';
-                }, 3000);
-            }
-        });
-
-        // Dark Mode
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const icon = document.getElementById('darkModeIcon');
-            icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-
-        // Check saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            document.getElementById('darkModeIcon').className = 'fas fa-sun';
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Deseja realmente sair?')) {
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('appContainer').style.display = 'none';
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-            }
-        }
-
-        // Load Students
-        function loadStudents() {
-            const container = document.getElementById('studentsContainer');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            let filteredStudents = students.filter(student => {
-                const matchesSearch = student.name.toLowerCase().includes(searchTerm) || 
-                                    student.phone.includes(searchTerm) ||
-                                    student.gym.toLowerCase().includes(searchTerm);
-                
-                if (!matchesSearch) return false;
-                
-                const today = new Date();
-                const expiryDate = new Date(student.expiry);
-                const isExpired = expiryDate < today;
-                
-                switch (currentFilter) {
-                    case 'active':
-                        return !isExpired;
-                    case 'expired':
-                        return isExpired;
-                    case 'referred':
-                        return student.referred;
-                    case 'renewed':
-                        return student.renewed;
-                    default:
-                        return true;
+            excluir(id) {
+                if(confirm('Deseja remover este aluno?')) {
+                    this.alunos = this.alunos.filter(a => a.id !== id);
+                    this.salvarStorage();
+                    this.mostrarToast('Aluno removido');
                 }
-            });
-            
-            container.innerHTML = filteredStudents.map(student => {
-                const today = new Date();
-                const expiryDate = new Date(student.expiry);
-                const isExpired = expiryDate < today;
-                const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-                
-                return `
-                    <div class="student-card" onclick="editStudent(${student.id})">
-                        <div class="student-header">
-                            <div class="student-info">
-                                <h3>${student.name}</h3>
-                                <p>${student.gym}</p>
-                            </div>
-                            <div class="student-status">
-                                <span class="status-badge ${isExpired ? 'expired' : daysUntilExpiry <= 7 ? 'pending' : 'active'}">
-                                    ${isExpired ? 'Vencido' : daysUntilExpiry <= 7 ? `${daysUntilExpiry} dias` : 'Ativo'}
-                                </span>
-                                ${student.referred ? '<span class="status-badge success">Indicou ' + student.referralCount + '</span>' : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="student-details">
-                            <div class="detail-item">
-                                <i class="fas fa-phone"></i>
-                                <span>${student.phone}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-calendar"></i>
-                                <span>${formatDate(student.expiry)}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-sync"></i>
-                                <span>${student.renewed ? 'Renovou' : 'Não renovou'}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-user-plus"></i>
-                                <span>${student.referred ? `${student.referralCount} indicações` : 'Não indicou'}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="student-actions">
-                            <button class="btn-action success" onclick="sendWhatsApp('${student.phone}', '${student.name}', event)">
-                                <i class="fab fa-whatsapp"></i>
-                                WhatsApp
-                            </button>
-                            <button class="btn-action primary" onclick="renewStudent(${student.id}, event)">
-                                <i class="fas fa-sync"></i>
-                                Renovar
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            updateStats();
-        }
+            }
 
-        // Update Stats
-        function updateStats() {
-            const today = new Date();
-            const total = students.length;
-            const active = students.filter(s => new Date(s.expiry) >= today).length;
-            const expired = students.filter(s => new Date(s.expiry) < today).length;
-            const referrals = students.reduce((sum, s) => sum + s.referralCount, 0);
-            
-            document.getElementById('totalStudents').textContent = total;
-            document.getElementById('activeStudents').textContent = active;
-            document.getElementById('expiredStudents').textContent = expired;
-            document.getElementById('totalReferrals').textContent = referrals;
-        }
+            fecharModal() {
+                document.getElementById('modalAluno').style.display = 'none';
+            }
 
-        // Update Revenue Stats
-        function updateRevenueStats() {
-            const today = new Date();
-            const activeStudents = students.filter(s => new Date(s.expiry) >= today);
-            
-            const pratiqueStudents = activeStudents.filter(s => s.gym === 'PRATIQUE');
-            const contornoStudents = activeStudents.filter(s => s.gym === 'CONTORNO DO CORPO');
-            
-            const pratiqueRevenue = pratiqueStudents.length * 70;
-            const contornoRevenue = contornoStudents.length * 80;
-            const totalRevenue = pratiqueRevenue + contornoRevenue;
-            const yearlyRevenue = totalRevenue * 12;
-            const averageRevenue = activeStudents.length > 0 ? (totalRevenue / activeStudents.length) : 0;
-            
-            document.getElementById('pratiqueRevenue').textContent = `R$ ${pratiqueRevenue.toLocaleString('pt-BR')}`;
-            document.getElementById('contornoRevenue').textContent = `R$ ${contornoRevenue.toLocaleString('pt-BR')}`;
-            document.getElementById('totalRevenue').textContent = `R$ ${totalRevenue.toLocaleString('pt-BR')}`;
-            document.getElementById('yearlyRevenue').textContent = `R$ ${yearlyRevenue.toLocaleString('pt-BR')}`;
-            document.getElementById('averageRevenue').textContent = `R$ ${averageRevenue.toFixed(2)}`;
-            
-            document.getElementById('pratiqueCount').textContent = pratiqueStudents.length;
-            document.getElementById('contornoCount').textContent = contornoStudents.length;
-            document.getElementById('monthlyGrowth').textContent = '+12%'; // Simulated growth
-        }
-
-        // Export Functions
-        function exportToExcel() {
-            const data = students.map(student => ({
-                'Nome': student.name,
-                'Telefone': student.phone,
-                'Academia': student.gym,
-                'Vencimento': formatDate(student.expiry),
-                'Renovou': student.renewed ? 'Sim' : 'Não',
-                'Indicou': student.referred ? 'Sim' : 'Não',
-                'Qtd Indicações': student.referralCount
-            }));
-            
-            const csv = convertToCSV(data);
-            downloadFile(csv, 'alunos_seven77.csv', 'text/csv');
-        }
-
-        function exportToCSV() {
-            const data = students.map(student => ({
-                'Nome': student.name,
-                'Telefone': student.phone,
-                'Academia': student.gym,
-                'Vencimento': formatDate(student.expiry),
-                'Renovou': student.renewed ? 'Sim' : 'Não',
-                'Indicou': student.referred ? 'Sim' : 'Não',
-                'Qtd Indicações': student.referralCount
-            }));
-            
-            const csv = convertToCSV(data);
-            downloadFile(csv, 'alunos_seven77.csv', 'text/csv');
-        }
-
-        function generateReport() {
-            const reportData = generateReportData();
-            const htmlContent = generateReportHTML(reportData);
-            
-            const newWindow = window.open('', '_blank');
-            newWindow.document.write(htmlContent);
-            newWindow.document.close();
-            newWindow.print();
-        }
-
-        function convertToCSV(data) {
-            const headers = Object.keys(data[0]).join(',');
-            const rows = data.map(row => Object.values(row).join(','));
-            return [headers, ...rows].join('\n');
-        }
-
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type: type });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function generateReportData() {
-            const today = new Date();
-            const activeStudents = students.filter(s => new Date(s.expiry) >= today);
-            const expiredStudents = students.filter(s => new Date(s.expiry) < today);
-            
-            return {
-                totalStudents: students.length,
-                activeStudents: activeStudents.length,
-                expiredStudents: expiredStudents.length,
-                pratiqueStudents: activeStudents.filter(s => s.gym === 'PRATIQUE').length,
-                contornoStudents: activeStudents.filter(s => s.gym === 'CONTORNO DO CORPO').length,
-                totalReferrals: students.reduce((sum, s) => sum + s.referralCount, 0),
-                monthlyRevenue: (activeStudents.filter(s => s.gym === 'PRATIQUE').length * 70) + 
-                               (activeStudents.filter(s => s.gym === 'CONTORNO DO CORPO').length * 80),
-                students: students
-            };
-        }
-
-        function generateReportHTML(data) {
-            return `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Relatório SEVEN77</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .header { text-align: center; margin-bottom: 30px; }
-                        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-                        .stat-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; text-align: center; }
-                        .stat-value { font-size: 24px; font-weight: bold; color: #6366f1; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #f2f2f2; }
-                        @media print { body { margin: 0; } }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>SEVEN77 - Relatório Completo</h1>
-                        <p>Gerado em: ${new Date().toLocaleDateString('pt-BR')}</p>
-                    </div>
-                    
-                    <div class="stats">
-                        <div class="stat-card">
-                            <div class="stat-value">${data.totalStudents}</div>
-                            <div>Total de Alunos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">${data.activeStudents}</div>
-                            <div>Alunos Ativos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">${data.expiredStudents}</div>
-                            <div>Alunos Vencidos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">R$ ${data.monthlyRevenue.toLocaleString('pt-BR')}</div>
-                            <div>Receita Mensal</div>
-                        </div>
-                    </div>
-                    
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Telefone</th>
-                                <th>Academia</th>
-                                <th>Vencimento</th>
-                                <th>Status</th>
-                                <th>Indicações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${data.students.map(student => `
-                                <tr>
-                                    <td>${student.name}</td>
-                                    <td>${student.phone}</td>
-                                    <td>${student.gym}</td>
-                                    <td>${formatDate(student.expiry)}</td>
-                                    <td>${new Date(student.expiry) >= new Date() ? 'Ativo' : 'Vencido'}</td>
-                                    <td>${student.referralCount}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </body>
-                </html>
-            `;
-        }
-
-        // Filter Students
-        function filterStudents(filter) {
-            currentFilter = filter;
-            
-            // Update active tab
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            loadStudents();
-        }
-
-        // Search
-        document.getElementById('searchInput').addEventListener('input', loadStudents);
-
-        // Format Date
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('pt-BR');
-        }
-
-        // Send WhatsApp
-        function sendWhatsApp(phone, name, event) {
-            event.stopPropagation();
-            const cleanPhone = phone.replace(/\D/g, '');
-            const message = `⚠️Atenção⚠️ ${name}! \n\nSua mensalidade está em aberto.
-Para evitar o Bloqueio automático do sistema, efetue o pagamento.
-
-💳 Chave Pix: 31991639752
-📩 Comprovante deve ser enviado por aqui.
-🔗 Caso Necessário Envie O Link da sua unidade: [inserir link]
-
-EqpSeven🛸
-`;
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        // Renew Student
-        function renewStudent(id, event) {
-            event.stopPropagation();
-            const student = students.find(s => s.id === id);
-            if (student) {
-                const newDate = new Date();
-                newDate.setMonth(newDate.getMonth() + 1);
-                student.expiry = newDate.toISOString().split('T')[0];
-                student.renewed = true;
-                saveToLocalStorage();
-                loadStudents();
-                updateRevenueStats();
-                alert(`Matrícula de ${student.name} renovada com sucesso!`);
+            mostrarToast(msg) {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = msg;
+                document.getElementById('toastContainer').appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
             }
         }
 
-        // Edit Student
-        function editStudent(id) {
-            const student = students.find(s => s.id === id);
-            if (student) {
-                editingId = id;
-                document.getElementById('modalTitle').textContent = 'Editar Aluno';
-                document.getElementById('studentName').value = student.name;
-                document.getElementById('studentPhone').value = student.phone;
-                document.getElementById('studentGym').value = student.gym;
-                document.getElementById('studentExpiry').value = student.expiry;
-                document.getElementById('studentRenewed').checked = student.renewed;
-                document.getElementById('studentReferred').checked = student.referred;
-                document.getElementById('referralCount').value = student.referralCount;
-                document.getElementById('btnDelete').style.display = 'block';
-                
-                if (student.referred) {
-                    document.getElementById('referralCountGroup').style.display = 'block';
-                }
-                
-                openModal();
-            }
-        }
-
-        // Delete Student
-        function deleteStudent() {
-            if (editingId && confirm('Tem certeza que deseja excluir este aluno?')) {
-                students = students.filter(s => s.id !== editingId);
-                saveToLocalStorage();
-                loadStudents();
-                updateRevenueStats();
-                closeModal();
-                alert('Aluno excluído com sucesso!');
-            }
-        }
-
-        // Open Add Modal
-        function openAddModal() {
-            editingId = null;
-            document.getElementById('modalTitle').textContent = 'Adicionar Aluno';
-            document.getElementById('studentForm').reset();
-            document.getElementById('referralCountGroup').style.display = 'none';
-            document.getElementById('btnDelete').style.display = 'none';
-            openModal();
-        }
-
-        // Open Modal
-        function openModal() {
-            document.getElementById('studentModal').classList.add('active');
-        }
-
-        // Close Modal
-        function closeModal() {
-            document.getElementById('studentModal').classList.remove('active');
-        }
-
-        // Handle Referral Checkbox
-        document.getElementById('studentReferred').addEventListener('change', function(e) {
-            document.getElementById('referralCountGroup').style.display = e.target.checked ? 'block' : 'none';
-            if (!e.target.checked) {
-                document.getElementById('referralCount').value = 0;
-            }
-        });
-
-        // Student Form Submit
-        document.getElementById('studentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const studentData = {
-                name: document.getElementById('studentName').value,
-                phone: document.getElementById('studentPhone').value,
-                gym: document.getElementById('studentGym').value,
-                expiry: document.getElementById('studentExpiry').value,
-                renewed: document.getElementById('studentRenewed').checked,
-                referred: document.getElementById('studentReferred').checked,
-                referralCount: parseInt(document.getElementById('referralCount').value) || 0
-            };
-            
-            if (editingId) {
-                // Edit existing student
-                const index = students.findIndex(s => s.id === editingId);
-                if (index !== -1) {
-                    students[index] = { ...students[index], ...studentData };
-                }
-            } else {
-                // Add new student
-                const newId = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
-                students.push({ id: newId, ...studentData });
-            }
-            
-            saveToLocalStorage();
-            loadStudents();
-            updateRevenueStats();
-            closeModal();
-        });
-
-        // Sincronização entre abas
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'seven77_students') {
-                loadFromLocalStorage();
-                loadStudents();
-                updateStats();
-                updateRevenueStats();
-            }
-        });
-
-        // Initialize
-        window.addEventListener('load', function() {
-            // Check if already logged in (for development)
-            if (window.location.hostname === 'localhost') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('appContainer').style.display = 'block';
-                loadFromLocalStorage();
-                loadStudents();
-                updateStats();
-                updateRevenueStats();
-            }
-        });
+        const app = new ControleAlunos();
     </script>
 </body>
 </html>
