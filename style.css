@@ -1,24 +1,7 @@
-/* Efeito de Vidro e Cores Neon */
-body { 
-    background: #0f1115; 
-    color: white; 
-    font-family: 'Inter', sans-serif;
-}
+body { background: #0f1115; color: white; font-family: 'Inter', sans-serif; }
+.glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.grad-purple { background: linear-gradient(135deg, #7C3AED 0%, #DB2777 100%); }
+.neon-purple { box-shadow: 0 0 25px rgba(124, 58, 237, 0.4); }
 
-.glass { 
-    background: rgba(255, 255, 255, 0.03); 
-    backdrop-filter: blur(12px); 
-    border: 1px solid rgba(255, 255, 255, 0.05); 
-}
-
-.neon-purple { 
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); 
-}
-
-.grad-purple { 
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); 
-}
-
-.no-scrollbar::-webkit-scrollbar { 
-    display: none; 
-}
+/* Remove setas do input number */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
