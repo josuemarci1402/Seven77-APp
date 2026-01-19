@@ -1,379 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SEVEN77 - Gestão Pro</title>
-    
-    <meta name="theme-color" content="#0f172a">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary: #6366f1;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-
-        body {
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
-            color: #f8fafc;
-            min-height: 100vh;
-            padding-bottom: 100px;
-        }
-
-        /* --- HEADER & STATS --- */
-        .header {
-            padding: 25px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo h2 { font-weight: 800; font-size: 24px; color: var(--primary); }
-        .logo span { color: #fff; opacity: 0.9; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 0 20px 20px;
-        }
-
-        .stat-item {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-item i { font-size: 14px; margin-bottom: 8px; display: block; }
-        .stat-val { font-size: 22px; font-weight: 800; display: block; }
-        .stat-lab { font-size: 11px; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
-
-        /* --- FILTROS --- */
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            padding: 0 20px 20px;
-            overflow-x: auto;
-        }
-
-        .filter-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .filter-btn.active { background: var(--primary); border-color: var(--primary); }
-
-        /* --- CARDS ALUNOS --- */
-        .search-area { padding: 0 20px 20px; }
-        .search-area input {
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            padding: 15px 20px;
-            border-radius: 14px;
-            color: white; outline: none;
-        }
-
-        .lista-alunos { padding: 0 20px; }
-        
-        .card {
-            background: var(--card-bg);
-            border-left: 4px solid var(--success);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .card.vencido { border-left-color: var(--danger); }
-        .card.pendente { border-left-color: var(--warning); }
-
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-name { font-size: 17px; font-weight: 600; }
-        .card-date { font-size: 13px; opacity: 0.6; margin-top: 4px; }
-
-        .badge {
-            font-size: 10px; padding: 4px 10px; border-radius: 8px; font-weight: 800;
-        }
-
-        .card-actions { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; }
-
-        .btn {
-            border: none; border-radius: 10px; padding: 10px;
-            font-weight: 700; cursor: pointer; font-size: 13px;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-        }
-
-        .btn-pay { background: var(--success); color: white; }
-        .btn-msg { background: #25d366; color: white; }
-        .btn-edit { background: rgba(255,255,255,0.1); color: white; width: 40px; }
-
-        /* --- FLOAT BUTTON --- */
-        .add-btn {
-            position: fixed; bottom: 30px; right: 25px;
-            width: 60px; height: 60px; border-radius: 30px;
-            background: var(--primary); color: white;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-            border: none; cursor: pointer; z-index: 100;
-        }
-
-        /* Modais, Toasts e Animações (mantidos e melhorados) */
-        .modal {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-            z-index: 1000; align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal-content {
-            background: #1e293b; width: 100%; max-width: 400px;
-            padding: 25px; border-radius: 24px; border: 1px solid var(--glass-border);
-        }
-        input, select {
-            width: 100%; padding: 12px; margin: 8px 0 20px;
-            background: #0f172a; border: 1px solid var(--glass-border);
-            border-radius: 10px; color: white;
-        }
-        .toast {
-            position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
-            background: var(--primary); padding: 10px 25px; border-radius: 30px;
-            font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Dashboard SEVEN77 - Gestão</title>
 </head>
-<body>
+<body class="bg-[#F4F6F9] font-sans pb-24">
 
-    <header class="header">
-        <div class="logo"><h2>SEVEN<span>77</span></h2></div>
-        <button class="filter-btn" onclick="app.abrirSync()"><i class="fas fa-cloud"></i></button>
-    </header>
-
-    <div class="stats-grid">
-        <div class="stat-item">
-            <i class="fas fa-users" style="color: var(--primary)"></i>
-            <span class="stat-val" id="countTotal">0</span>
-            <span class="stat-lab">Alunos</span>
+    <div class="p-4 grid grid-cols-2 gap-4">
+        <div class="bg-white p-5 rounded-[2rem] shadow-sm flex flex-col items-center">
+            <i class="fas fa-users text-purple-600 mb-2 opacity-30 text-2xl"></i>
+            <h3 class="text-3xl font-extrabold text-gray-800 tracking-tight">70</h3>
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Total Alunos</p>
         </div>
-        <div class="stat-item">
-            <i class="fas fa-dollar-sign" style="color: var(--success)"></i>
-            <span class="stat-val" id="valFaturamento">R$ 0</span>
-            <span class="stat-lab">Previsto</span>
+        <div class="bg-white p-5 rounded-[2rem] shadow-sm flex flex-col items-center">
+            <i class="fas fa-check-circle text-green-500 mb-2 opacity-30 text-2xl"></i>
+            <h3 class="text-3xl font-extrabold text-gray-800 tracking-tight">66</h3>
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Ativos</p>
         </div>
-    </div>
-
-    <div class="filter-bar">
-        <button class="filter-btn active" onclick="app.setFilter('todos', this)">Todos</button>
-        <button class="filter-btn" onclick="app.setFilter('vencidos', this)">Vencidos</button>
-        <button class="filter-btn" onclick="app.setFilter('pendentes', this)">Próximos</button>
-    </div>
-
-    <div class="search-area">
-        <input type="text" placeholder="Procurar aluno..." id="searchInp">
-    </div>
-
-    <div class="lista-alunos" id="lista"></div>
-
-    <button class="add-btn" onclick="app.novoAluno()"><i class="fas fa-plus"></i></button>
-
-    <div class="modal" id="modalForm">
-        <div class="modal-content">
-            <h3 id="modalTitle" style="margin-bottom: 20px;">Adicionar Aluno</h3>
-            <label>Nome</label>
-            <input type="text" id="fNome">
-            <label>WhatsApp</label>
-            <input type="tel" id="fTel" placeholder="319...">
-            <label>Vencimento</label>
-            <input type="date" id="fVenc">
-            <label>Valor Mensal</label>
-            <input type="number" id="fValor" value="80">
-            
-            <button class="btn btn-pay" style="width: 100%; padding: 15px;" onclick="app.salvar()">SALVAR</button>
-            <button id="btnDel" class="btn" style="width: 100%; margin-top: 10px; background: none; color: var(--danger);" onclick="app.excluir()">Excluir</button>
-            <button class="btn" style="width: 100%; margin-top: 10px; background: none;" onclick="app.fecharModais()">Cancelar</button>
+        <div class="bg-white p-5 rounded-[2rem] shadow-sm flex flex-col items-center border-b-4 border-purple-500">
+            <i class="fas fa-user-plus text-yellow-500 mb-2 opacity-30 text-2xl"></i>
+            <h3 class="text-3xl font-extrabold text-gray-800 tracking-tight">20</h3>
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Indicações</p>
+        </div>
+        <div class="bg-white p-5 rounded-[2rem] shadow-sm flex flex-col items-center border-b-4 border-red-500">
+            <i class="fas fa-calendar-times text-red-500 mb-2 opacity-30 text-2xl"></i>
+            <h3 class="text-3xl font-extrabold text-gray-800 tracking-tight text-red-600">4</h3>
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest text-red-400">Vencidos</p>
         </div>
     </div>
 
-    <script>
-        class SistemaAcademia {
-            constructor() {
-                this.alunos = JSON.parse(localStorage.getItem('seven77_db')) || [];
-                this.filtro = 'todos';
-                this.editando = null;
-                this.init();
-            }
+    <div class="px-4 mb-6">
+        <div class="relative">
+            <input type="text" placeholder="Buscar aluno..." class="w-full p-4 pl-12 rounded-2xl bg-white border-none shadow-sm text-gray-700 focus:ring-2 focus:ring-purple-600 outline-none">
+            <i class="fas fa-search absolute left-5 top-5 text-gray-300"></i>
+        </div>
+        <div class="flex gap-2 mt-4 overflow-x-auto pb-2 no-scrollbar">
+            <button class="bg-purple-600 text-white px-8 py-2.5 rounded-2xl text-xs font-bold shadow-lg shadow-purple-200">Todos</button>
+            <button class="bg-white text-gray-400 px-8 py-2.5 rounded-2xl text-xs font-bold shadow-sm">Ativos</button>
+            <button class="bg-white text-red-500 px-8 py-2.5 rounded-2xl text-xs font-bold shadow-sm border border-red-100">Vencidos</button>
+        </div>
+    </div>
 
-            init() {
-                this.render();
-                document.getElementById('searchInp').oninput = () => this.render();
-            }
+    <div class="px-4 space-y-4">
+        <h2 class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2">Atenção Necessária</h2>
+        
+        <div class="bg-white p-5 rounded-[2.5rem] shadow-md flex justify-between items-center relative overflow-hidden group">
+            <div class="absolute left-0 top-0 h-full w-2 bg-red-500"></div>
+            <div>
+                <h4 class="font-bold text-gray-900 text-lg leading-tight uppercase tracking-tighter">Raylanderson Souza</h4>
+                <div class="flex items-center mt-1">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                    <p class="text-red-500 text-[10px] font-black uppercase">Bloqueio Automático Próximo</p>
+                </div>
+            </div>
 
-            setFilter(f, btn) {
-                this.filtro = f;
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.render();
-            }
+            <a href="https://wa.me/5531991639752?text=%E2%9A%A0%EF%B8%8FAten%C3%A7%C3%A3o%E2%9A%A0%EF%B8%8F%20%0A%0ASua%20mensalidade%20est%C3%A1%20em%20aberto.%20%0APara%20evitar%20o%20Bloqueio%20autom%C3%A1tico%20do%20sistema%2C%20efetue%20o%20pagamento.%20%0A%0A%F0%9F%92%B3%20Chave%20Pix%3A%2031991639752%20%0A%F0%9F%93%A9%20Comprovante%20deve%20ser%20enviado%20por%20aqui.%20%0A%F0%9F%94%97N%C3%83O%20SE%20ESQUE%C3%87A%20DE%20ENVIAR%20SEU%20E-MAIL%20E%20SENHA%20DO%20APLICATIVO%20PARA%20RENOVA%C3%87%C3%83O%20%0A%0AEqpSeven%F0%9F%9B%B8" 
+               class="bg-green-500 text-white w-14 h-14 rounded-[1.5rem] flex items-center justify-center shadow-xl shadow-green-100 hover:scale-105 active:scale-95 transition-all">
+                <i class="fab fa-whatsapp text-2xl"></i>
+            </a>
+        </div>
+    </div>
 
-            calcularStatus(data) {
-                const hoje = new Date().setHours(0,0,0,0);
-                const venc = new Date(data + 'T00:00:00').getTime();
-                const diff = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
-                if (diff < 0) return 'vencido';
-                if (diff <= 5) return 'pendente';
-                return 'ok';
-            }
+    <div class="fixed bottom-0 w-full bg-white/80 backdrop-blur-md border-t border-gray-100 p-4 flex justify-around items-center rounded-t-[2.5rem]">
+        <div class="text-purple-600 flex flex-col items-center">
+            <div class="bg-purple-100 p-2 rounded-xl mb-1 px-4">
+                <i class="fas fa-users text-lg"></i>
+            </div>
+            <span class="text-[9px] font-black uppercase tracking-tighter">Alunos</span>
+        </div>
+        <div class="text-gray-300 flex flex-col items-center">
+            <i class="fas fa-file-export text-lg mb-1"></i>
+            <span class="text-[9px] font-black uppercase tracking-tighter">Exportar</span>
+        </div>
+        <div class="text-gray-300 flex flex-col items-center">
+            <i class="fas fa-dollar-sign text-lg mb-1"></i>
+            <span class="text-[9px] font-black uppercase tracking-tighter">Receita</span>
+        </div>
+    </div>
 
-            render() {
-                const container = document.getElementById('lista');
-                const busca = document.getElementById('searchInp').value.toLowerCase();
-                container.innerHTML = '';
-
-                let filtrados = this.alunos.filter(a => a.nome.toLowerCase().includes(busca));
-                
-                if (this.filtro === 'vencidos') filtrados = filtrados.filter(a => this.calcularStatus(a.vencimento) === 'vencido');
-                if (this.filtro === 'pendentes') filtrados = filtrados.filter(a => this.calcularStatus(a.vencimento) === 'pendente');
-
-                filtrados.sort((a,b) => new Date(a.vencimento) - new Date(b.vencimento));
-
-                filtrados.forEach(aluno => {
-                    const status = this.calcularStatus(aluno.vencimento);
-                    const card = document.createElement('div');
-                    card.className = `card ${status}`;
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <div>
-                                <div class="card-name">${aluno.nome}</div>
-                                <div class="card-date">Vence em: ${aluno.vencimento.split('-').reverse().join('/')}</div>
-                            </div>
-                            <span class="badge" style="background: var(--${status === 'ok' ? 'success' : (status === 'vencido' ? 'danger' : 'warning')})">
-                                ${status.toUpperCase()}
-                            </span>
-                        </div>
-                        <div class="card-actions">
-                            <button class="btn btn-pay" onclick="app.confirmarPagamento(${aluno.id})">
-                                <i class="fas fa-check"></i> RENOVAR
-                            </button>
-                            <button class="btn btn-msg" onclick="app.cobrar(${aluno.id})">
-                                <i class="fab fa-whatsapp"></i> COBRAR
-                            </button>
-                            <button class="btn btn-edit" onclick="app.editar(${aluno.id})">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-
-                this.atualizarDashboard();
-            }
-
-            confirmarPagamento(id) {
-                if(!confirm("Confirmar pagamento e renovar por +30 dias?")) return;
-                const idx = this.alunos.findIndex(a => a.id === id);
-                let data = new Date(this.alunos[idx].vencimento + 'T00:00:00');
-                data.setDate(data.getDate() + 30);
-                this.alunos[idx].vencimento = data.toISOString().split('T')[0];
-                this.salvarDB();
-                this.toast("Mensalidade renovada! 🎉");
-            }
-
-            cobrar(id) {
-                const a = this.alunos.find(al => al.id === id);
-                const msg = `Olá ${a.nome}! 🏋️‍♂️\nPassando para avisar que sua mensalidade vence dia ${a.vencimento.split('-').reverse().join('/')}.\nValor: R$ ${a.valor},00\n\nChave Pix: 31991639752\nQualquer dúvida, estou à disposição!`;
-                window.open(`https://wa.me/55${a.telefone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`);
-            }
-
-            novoAluno() {
-                this.editando = null;
-                document.getElementById('modalTitle').innerText = "Novo Aluno";
-                document.getElementById('btnDel').style.display = 'none';
-                document.getElementById('fNome').value = '';
-                document.getElementById('fTel').value = '';
-                document.getElementById('fVenc').value = new Date().toISOString().split('T')[0];
-                document.getElementById('modalForm').style.display = 'flex';
-            }
-
-            editar(id) {
-                this.editando = id;
-                const a = this.alunos.find(al => al.id === id);
-                document.getElementById('modalTitle').innerText = "Editar Aluno";
-                document.getElementById('btnDel').style.display = 'block';
-                document.getElementById('fNome').value = a.nome;
-                document.getElementById('fTel').value = a.telefone;
-                document.getElementById('fVenc').value = a.vencimento;
-                document.getElementById('fValor').value = a.valor;
-                document.getElementById('modalForm').style.display = 'flex';
-            }
-
-            salvar() {
-                const dados = {
-                    id: this.editando || Date.now(),
-                    nome: document.getElementById('fNome').value,
-                    telefone: document.getElementById('fTel').value,
-                    vencimento: document.getElementById('fVenc').value,
-                    valor: document.getElementById('fValor').value
-                };
-
-                if(!dados.nome || !dados.vencimento) return alert("Preencha Nome e Data!");
-
-                if(this.editando) {
-                    const idx = this.alunos.findIndex(a => a.id === this.editando);
-                    this.alunos[idx] = dados;
-                } else {
-                    this.alunos.push(dados);
-                }
-
-                this.salvarDB();
-                this.fecharModais();
-                this.toast("Dados salvos!");
-            }
-
-            excluir() {
-                if(!confirm("Excluir este aluno permanentemente?")) return;
-                this.alunos = this.alunos.filter(a => a.id !== this.editando);
-                this.salvarDB();
-                this.fecharModais();
-            }
-
-            salvarDB() {
-                localStorage.setItem('seven77_db', JSON.stringify(this.alunos));
-                this.render();
-            }
-
-            fecharModais() { document.getElementById('modalForm').style.display = 'none'; }
-
-            atualizarDashboard() {
-                document.getElementById('countTotal').innerText = this.alunos.length;
-                const totalVal = this.alunos.reduce((acc, cur) => acc + Number(cur.valor), 0);
-                document.getElementById('valFaturamento').innerText = `R$ ${totalVal}`;
-            }
-
-            toast(m) {
-                const t = document.createElement('div');
-                t.className = 'toast'; t.innerText = m;
-                document.body.appendChild(t);
-                setTimeout(() => t.remove(), 2500);
-            }
-        }
-
-        const app = new SistemaAcademia();
-    </script>
 </body>
 </html>
