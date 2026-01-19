@@ -3,633 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SEVEN77 - Premium System</title>
+    <title>SEVEN77 - Gestão Pro</title>
     
-    <meta name="theme-color" content="#1a1a2e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+    <meta name="theme-color" content="#0f172a">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
-        /* --- TEMA ANIMADO & CORES --- */
         :root {
-            --bg-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-color: #ffffff;
-            --text-muted: #e0e0e0;
-            --accent: #00ff88; /* Verde Neon */
-            --danger: #ff4757;
-            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --primary: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg-gradient);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite; /* Animação do Fundo */
-            color: var(--text-color);
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            color: #f8fafc;
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* --- HEADER --- */
+        /* --- HEADER & STATS --- */
         .header {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 25px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--glass-border);
         }
 
-        .logo h2 { 
-            font-weight: 800; 
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .logo h2 { font-weight: 800; font-size: 24px; color: var(--primary); }
+        .logo span { color: #fff; opacity: 0.9; }
 
-        .btn-sync {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-sync:hover { background: var(--accent); color: black; }
-
-        /* --- DASHBOARD (STATS) --- */
-        .stats-container {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
+            gap: 12px;
+            padding: 0 20px 20px;
         }
 
-        .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(5px);
+        .stat-item {
+            background: var(--card-bg);
             border: 1px solid var(--glass-border);
             padding: 15px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
         }
 
-        .stat-value { font-size: 26px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .stat-label { font-size: 11px; opacity: 0.8; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        .stat-item i { font-size: 14px; margin-bottom: 8px; display: block; }
+        .stat-val { font-size: 22px; font-weight: 800; display: block; }
+        .stat-lab { font-size: 11px; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
 
-        /* --- LISTA --- */
-        .alunos-container { padding: 0 20px; }
-
-        .search-box {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 15px 15px 15px 50px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            font-size: 16px;
-            backdrop-filter: blur(5px);
-        }
-        .search-box input::placeholder { color: rgba(255,255,255,0.5); }
-        .search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); }
-
-        .aluno-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .aluno-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.15); }
-
-        /* Barra lateral indicadora de status */
-        .status-indicator {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 6px;
-        }
-
-        .aluno-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; padding-left: 10px; }
-        .aluno-info h3 { font-size: 18px; margin-bottom: 5px; font-weight: 600; }
-        .aluno-info p { font-size: 14px; opacity: 0.7; display: flex; align-items: center; gap: 5px; }
-
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        /* Cores de Status - Neon */
-        .st-ok { background: #00ff88; color: #004422; box-shadow: 0 0 10px #00ff88; }
-        .st-warn { background: #ffcc00; color: #443300; box-shadow: 0 0 10px #ffcc00; }
-        .st-err { background: #ff4757; color: white; box-shadow: 0 0 10px #ff4757; }
-
-        .aluno-actions {
+        /* --- FILTROS --- */
+        .filter-bar {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
-            padding-left: 10px;
+            padding: 0 20px 20px;
+            overflow-x: auto;
         }
 
-        .btn-action {
-            flex: 1;
-            padding: 12px;
-            border-radius: 15px;
-            border: none;
-            font-weight: 700;
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 14px;
-            transition: 0.2s;
         }
 
-        .btn-whatsapp { background: #25D366; color: white; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
-        .btn-edit { background: rgba(255,255,255,0.2); color: white; }
+        .filter-btn.active { background: var(--primary); border-color: var(--primary); }
+
+        /* --- CARDS ALUNOS --- */
+        .search-area { padding: 0 20px 20px; }
+        .search-area input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 15px 20px;
+            border-radius: 14px;
+            color: white; outline: none;
+        }
+
+        .lista-alunos { padding: 0 20px; }
         
-        /* --- FAB & MODAL --- */
-        .fab {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 65px;
-            height: 65px;
-            background: white;
-            color: #e73c7e;
-            border-radius: 50%;
-            border: none;
-            font-size: 28px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            cursor: pointer;
-            z-index: 99;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
+        .card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--success);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: 0.3s;
         }
-        .fab:active { transform: scale(0.9); }
 
+        .card.vencido { border-left-color: var(--danger); }
+        .card.pendente { border-left-color: var(--warning); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-name { font-size: 17px; font-weight: 600; }
+        .card-date { font-size: 13px; opacity: 0.6; margin-top: 4px; }
+
+        .badge {
+            font-size: 10px; padding: 4px 10px; border-radius: 8px; font-weight: 800;
+        }
+
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; }
+
+        .btn {
+            border: none; border-radius: 10px; padding: 10px;
+            font-weight: 700; cursor: pointer; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+
+        .btn-pay { background: var(--success); color: white; }
+        .btn-msg { background: #25d366; color: white; }
+        .btn-edit { background: rgba(255,255,255,0.1); color: white; width: 40px; }
+
+        /* --- FLOAT BUTTON --- */
+        .add-btn {
+            position: fixed; bottom: 30px; right: 25px;
+            width: 60px; height: 60px; border-radius: 30px;
+            background: var(--primary); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+            border: none; cursor: pointer; z-index: 100;
+        }
+
+        /* Modais, Toasts e Animações (mantidos e melhorados) */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            z-index: 1000; align-items: center; justify-content: center; padding: 20px;
         }
-
         .modal-content {
-            background: #1e1e2f;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 25px;
-            padding: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            animation: zoomIn 0.3s ease;
+            background: #1e293b; width: 100%; max-width: 400px;
+            padding: 25px; border-radius: 24px; border: 1px solid var(--glass-border);
         }
-
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            font-size: 16px;
-            color: white;
+        input, select {
+            width: 100%; padding: 12px; margin: 8px 0 20px;
+            background: #0f172a; border: 1px solid var(--glass-border);
+            border-radius: 10px; color: white;
         }
-
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #e73c7e, #ee7752);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: 800;
-            margin-top: 10px;
-            box-shadow: 0 5px 20px rgba(231, 60, 126, 0.4);
-        }
-
-        /* Toast Notification */
         .toast {
-            position: fixed;
-            top: 20px; left: 50%; transform: translateX(-50%);
-            background: white; color: black;
-            padding: 12px 30px; border-radius: 50px;
-            font-weight: 700; z-index: 2000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: slideDown 0.5s ease;
+            position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); padding: 10px 25px; border-radius: 30px;
+            font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        @keyframes slideDown { from {top: -50px;} to {top: 20px;} }
-
-        /* Sync Area */
-        .sync-area { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .sync-btn { width: 48%; padding: 10px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .sync-save { background: #00ff88; color: black; }
-        .sync-load { background: #23a6d5; color: white; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="logo">
-            <h2><i class="fas fa-bolt" style="color: var(--accent)"></i> SEVEN77</h2>
-        </div>
-        <button class="btn-sync" onclick="app.abrirModalSync()">
-            <i class="fas fa-sync"></i> Sincronizar
-        </button>
+        <div class="logo"><h2>SEVEN<span>77</span></h2></div>
+        <button class="filter-btn" onclick="app.abrirSync()"><i class="fas fa-cloud"></i></button>
     </header>
 
-    <div class="stats-container">
-        <div class="stat-card">
-            <div class="stat-value" id="totalAlunos">0</div>
-            <div class="stat-label">Total Alunos</div>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <i class="fas fa-users" style="color: var(--primary)"></i>
+            <span class="stat-val" id="countTotal">0</span>
+            <span class="stat-lab">Alunos</span>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="receitaMensal" style="color: var(--accent)">R$ 0</div>
-            <div class="stat-label">Faturamento</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value" id="alunosAtivos">0</div>
-            <div class="stat-label">Ativos</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value" id="alunosVencidos" style="color: var(--danger)">0</div>
-            <div class="stat-label">Vencidos</div>
+        <div class="stat-item">
+            <i class="fas fa-dollar-sign" style="color: var(--success)"></i>
+            <span class="stat-val" id="valFaturamento">R$ 0</span>
+            <span class="stat-lab">Previsto</span>
         </div>
     </div>
 
-    <div class="alunos-container">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Pesquisar aluno...">
-        </div>
-        <div id="alunosList"></div>
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="app.setFilter('todos', this)">Todos</button>
+        <button class="filter-btn" onclick="app.setFilter('vencidos', this)">Vencidos</button>
+        <button class="filter-btn" onclick="app.setFilter('pendentes', this)">Próximos</button>
     </div>
 
-    <button class="fab" onclick="app.abrirModal()">
-        <i class="fas fa-plus"></i>
-    </button>
+    <div class="search-area">
+        <input type="text" placeholder="Procurar aluno..." id="searchInp">
+    </div>
 
-    <div class="modal" id="modalAluno">
+    <div class="lista-alunos" id="lista"></div>
+
+    <button class="add-btn" onclick="app.novoAluno()"><i class="fas fa-plus"></i></button>
+
+    <div class="modal" id="modalForm">
         <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <h3 id="modalTitle" style="color:white">Novo Aluno</h3>
-                <i class="fas fa-times" onclick="app.fecharModal()" style="cursor: pointer; font-size: 20px; color: white;"></i>
-            </div>
-            <form id="formAluno">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="inputNome" required>
-                </div>
-                <div class="form-group">
-                    <label>Telefone (WhatsApp)</label>
-                    <input type="tel" id="inputTelefone" placeholder="(31) 99999-9999" required>
-                </div>
-                <div class="form-group">
-                    <label>Vencimento</label>
-                    <input type="date" id="inputVencimento" required>
-                </div>
-                <input type="hidden" id="inputValor" value="80">
-                <button type="submit" class="btn-submit">SALVAR <i class="fas fa-check"></i></button>
-                
-                <button type="button" id="btnDelete" onclick="app.excluirAtual()" style="width: 100%; background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 10px; border-radius: 10px; margin-top: 15px; display: none;">
-                    Excluir Aluno
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal" id="modalSync">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <h3 style="color:white"><i class="fas fa-cloud"></i> Sincronização</h3>
-                <i class="fas fa-times" onclick="document.getElementById('modalSync').style.display='none'" style="cursor: pointer; font-size: 20px; color: white;"></i>
-            </div>
-            <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;">
-                Como não usamos servidor, para passar dados do PC pro Celular (ou vice-versa):
-                <br>1. Clique em <b>COPIAR CÓDIGO</b> no aparelho atual.
-                <br>2. Envie o código para você mesmo (WhatsApp/Email).
-                <br>3. No outro aparelho, cole em <b>COLAR CÓDIGO</b> e clique em Importar.
-            </p>
+            <h3 id="modalTitle" style="margin-bottom: 20px;">Adicionar Aluno</h3>
+            <label>Nome</label>
+            <input type="text" id="fNome">
+            <label>WhatsApp</label>
+            <input type="tel" id="fTel" placeholder="319...">
+            <label>Vencimento</label>
+            <input type="date" id="fVenc">
+            <label>Valor Mensal</label>
+            <input type="number" id="fValor" value="80">
             
-            <div class="form-group">
-                <label>Dados do Sistema (JSON)</label>
-                <textarea id="syncData" rows="5" placeholder="Cole o código aqui para importar..."></textarea>
-            </div>
-
-            <div style="display: flex; justify-content: space-between;">
-                <button class="sync-btn sync-save" onclick="app.exportarDados()">
-                    <i class="fas fa-copy"></i> COPIAR CÓDIGO
-                </button>
-                <button class="sync-btn sync-load" onclick="app.importarDados()">
-                    <i class="fas fa-download"></i> IMPORTAR
-                </button>
-            </div>
+            <button class="btn btn-pay" style="width: 100%; padding: 15px;" onclick="app.salvar()">SALVAR</button>
+            <button id="btnDel" class="btn" style="width: 100%; margin-top: 10px; background: none; color: var(--danger);" onclick="app.excluir()">Excluir</button>
+            <button class="btn" style="width: 100%; margin-top: 10px; background: none;" onclick="app.fecharModais()">Cancelar</button>
         </div>
     </div>
 
     <script>
-        class ControleAlunos {
+        class SistemaAcademia {
             constructor() {
-                // LISTA ATUALIZADA (28 Alunos - Contorno)
-                this.initialStudents = [
-                    { id: 1, nome: "Maria de Fátima Santos", telefone: "3187906146", vencimento: "2025-12-05", valor: 80 },
-                    { id: 2, nome: "Rayane Cesario", telefone: "3197609800", vencimento: "2025-12-08", valor: 80 },
-                    { id: 3, nome: "Ana Carolina Vieira dos Santos", telefone: "3191883269", vencimento: "2025-12-08", valor: 80 },
-                    { id: 4, nome: "David Lorran Alves", telefone: "3197055116", vencimento: "2025-12-06", valor: 80 },
-                    { id: 5, nome: "Michelle Caroline Otoni", telefone: "31982314279", vencimento: "2025-12-17", valor: 80 },
-                    { id: 6, nome: "JOSE VICTOR ALMEIDA", telefone: "3183039961", vencimento: "2025-12-20", valor: 80 },
-                    { id: 7, nome: "Maximo dos Santos Fiau", telefone: "3195333547", vencimento: "2025-12-21", valor: 80 },
-                    { id: 8, nome: "Lazaro Silva", telefone: "3195280109", vencimento: "2025-12-06", valor: 80 },
-                    { id: 9, nome: "Felipe", telefone: "31993579390", vencimento: "2025-12-10", valor: 80 },
-                    { id: 10, nome: "Wagner", telefone: "3199669339", vencimento: "2025-12-23", valor: 80 },
-                    { id: 11, nome: "Daniel Pereira", telefone: "31999651865", vencimento: "2025-12-03", valor: 80 },
-                    { id: 12, nome: "Michel", telefone: "31985505591", vencimento: "2025-12-06", valor: 80 },
-                    { id: 13, nome: "Lorena Da Costa Duarte", telefone: "31982024030", vencimento: "2025-12-05", valor: 80 },
-                    { id: 14, nome: "Marcos Vinicius", telefone: "31982024030", vencimento: "2025-12-05", valor: 80 },
-                    { id: 15, nome: "Josué Thiago", telefone: "31975985825", vencimento: "2025-11-28", valor: 80 },
-                    { id: 16, nome: "Letícia Beatriz", telefone: "31988669697", vencimento: "2025-12-17", valor: 80 },
-                    { id: 17, nome: "Andressa Vasconcellos", telefone: "31989165809", vencimento: "2025-12-21", valor: 80 },
-                    { id: 18, nome: "Maria Luísa", telefone: "31982246425", vencimento: "2025-11-30", valor: 80 },
-                    { id: 19, nome: "Lucas Rafael", telefone: "31982246425", vencimento: "2025-11-30", valor: 80 },
-                    { id: 20, nome: "Luiz Fernando Fernandes", telefone: "31984689170", vencimento: "2025-11-28", valor: 80 },
-                    { id: 21, nome: "Victor", telefone: "31992854862", vencimento: "2025-12-09", valor: 80 },
-                    { id: 22, nome: "Eduardo", telefone: "31988025045", vencimento: "2025-12-03", valor: 80 },
-                    { id: 23, nome: "Josiane Kênia", telefone: "31988025045", vencimento: "2025-12-04", valor: 80 },
-                    { id: 24, nome: "Gabriela Doris Vieira Marçal", telefone: "31999651865", vencimento: "2025-12-07", valor: 80 },
-                    { id: 25, nome: "Priscila Lopes de Souza", telefone: "31987301138", vencimento: "2025-12-06", valor: 80 },
-                    { id: 26, nome: "Raiane Fernades", telefone: "31989861378", vencimento: "2025-12-25", valor: 80 },
-                    { id: 27, nome: "Helen Cristina", telefone: "31991329073", vencimento: "2025-12-26", valor: 80 },
-                    { id: 28, nome: "Gláucia Valéria", telefone: "31988689590", vencimento: "2025-12-09", valor: 80 }
-                ];
-
-                this.alunos = this.carregarAlunos();
-                this.editandoId = null;
+                this.alunos = JSON.parse(localStorage.getItem('seven77_db')) || [];
+                this.filtro = 'todos';
+                this.editando = null;
                 this.init();
             }
 
             init() {
-                this.renderizar();
-                this.atualizarStats();
-                
-                document.getElementById('searchInput').addEventListener('input', () => this.renderizar());
-                document.getElementById('formAluno').addEventListener('submit', (e) => this.salvarAluno(e));
-                
-                document.getElementById('inputTelefone').addEventListener('input', (e) => {
-                    let v = e.target.value.replace(/\D/g,'');
-                    v = v.replace(/^(\d{2})(\d)/g,"($1) $2");
-                    v = v.replace(/(\d)(\d{4})$/,"$1-$2");
-                    e.target.value = v;
-                });
+                this.render();
+                document.getElementById('searchInp').oninput = () => this.render();
             }
 
-            carregarAlunos() {
-                const saved = localStorage.getItem('seven77_v3');
-                if (saved) return JSON.parse(saved);
-                localStorage.setItem('seven77_v3', JSON.stringify(this.initialStudents));
-                return this.initialStudents;
+            setFilter(f, btn) {
+                this.filtro = f;
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.render();
             }
 
-            salvarStorage() {
-                localStorage.setItem('seven77_v3', JSON.stringify(this.alunos));
-                this.atualizarStats();
-                this.renderizar();
+            calcularStatus(data) {
+                const hoje = new Date().setHours(0,0,0,0);
+                const venc = new Date(data + 'T00:00:00').getTime();
+                const diff = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
+                if (diff < 0) return 'vencido';
+                if (diff <= 5) return 'pendente';
+                return 'ok';
             }
 
-            renderizar() {
-                const termo = document.getElementById('searchInput').value.toLowerCase();
-                const container = document.getElementById('alunosList');
+            render() {
+                const container = document.getElementById('lista');
+                const busca = document.getElementById('searchInp').value.toLowerCase();
                 container.innerHTML = '';
 
-                const filtrados = this.alunos.filter(a => a.nome.toLowerCase().includes(termo));
+                let filtrados = this.alunos.filter(a => a.nome.toLowerCase().includes(busca));
+                
+                if (this.filtro === 'vencidos') filtrados = filtrados.filter(a => this.calcularStatus(a.vencimento) === 'vencido');
+                if (this.filtro === 'pendentes') filtrados = filtrados.filter(a => this.calcularStatus(a.vencimento) === 'pendente');
+
+                filtrados.sort((a,b) => new Date(a.vencimento) - new Date(b.vencimento));
 
                 filtrados.forEach(aluno => {
-                    const dias = this.calcularDias(aluno.vencimento);
-                    let statusClass = 'st-ok';
-                    let statusText = 'EM DIA';
-                    let indicatorColor = '#00ff88';
-
-                    if (dias < 0) {
-                        statusClass = 'st-err';
-                        statusText = 'VENCIDO';
-                        indicatorColor = '#ff4757';
-                    } else if (dias <= 5) {
-                        statusClass = 'st-warn';
-                        statusText = 'VENCE LOGO';
-                        indicatorColor = '#ffcc00';
-                    }
-
-                    const html = `
-                        <div class="aluno-card">
-                            <div class="status-indicator" style="background: ${indicatorColor}"></div>
-                            <div class="aluno-header">
-                                <div class="aluno-info">
-                                    <h3>${aluno.nome}</h3>
-                                    <p><i class="far fa-clock"></i> ${this.formatarData(aluno.vencimento)}</p>
-                                </div>
-                                <span class="status-badge ${statusClass}">${statusText}</span>
+                    const status = this.calcularStatus(aluno.vencimento);
+                    const card = document.createElement('div');
+                    card.className = `card ${status}`;
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div>
+                                <div class="card-name">${aluno.nome}</div>
+                                <div class="card-date">Vence em: ${aluno.vencimento.split('-').reverse().join('/')}</div>
                             </div>
-                            <div class="aluno-actions">
-                                <button class="btn-action btn-whatsapp" onclick="app.enviarZap(${aluno.id})">
-                                    <i class="fab fa-whatsapp"></i> COBRAR
-                                </button>
-                                <button class="btn-action btn-edit" onclick="app.editar(${aluno.id})">
-                                    <i class="fas fa-pen"></i>
-                                </button>
-                            </div>
+                            <span class="badge" style="background: var(--${status === 'ok' ? 'success' : (status === 'vencido' ? 'danger' : 'warning')})">
+                                ${status.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-pay" onclick="app.confirmarPagamento(${aluno.id})">
+                                <i class="fas fa-check"></i> RENOVAR
+                            </button>
+                            <button class="btn btn-msg" onclick="app.cobrar(${aluno.id})">
+                                <i class="fab fa-whatsapp"></i> COBRAR
+                            </button>
+                            <button class="btn btn-edit" onclick="app.editar(${aluno.id})">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
                         </div>
                     `;
-                    container.insertAdjacentHTML('beforeend', html);
+                    container.appendChild(card);
                 });
+
+                this.atualizarDashboard();
             }
 
-            calcularDias(data) {
-                const hoje = new Date();
-                hoje.setHours(0,0,0,0);
-                const venc = new Date(data + 'T00:00:00'); 
-                const diff = venc - hoje;
-                return Math.ceil(diff / (1000 * 60 * 60 * 24));
+            confirmarPagamento(id) {
+                if(!confirm("Confirmar pagamento e renovar por +30 dias?")) return;
+                const idx = this.alunos.findIndex(a => a.id === id);
+                let data = new Date(this.alunos[idx].vencimento + 'T00:00:00');
+                data.setDate(data.getDate() + 30);
+                this.alunos[idx].vencimento = data.toISOString().split('T')[0];
+                this.salvarDB();
+                this.toast("Mensalidade renovada! 🎉");
             }
 
-            formatarData(data) {
-                const [ano, mes, dia] = data.split('-');
-                return `${dia}/${mes}/${ano}`;
+            cobrar(id) {
+                const a = this.alunos.find(al => al.id === id);
+                const msg = `Olá ${a.nome}! 🏋️‍♂️\nPassando para avisar que sua mensalidade vence dia ${a.vencimento.split('-').reverse().join('/')}.\nValor: R$ ${a.valor},00\n\nChave Pix: 31991639752\nQualquer dúvida, estou à disposição!`;
+                window.open(`https://wa.me/55${a.telefone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`);
             }
 
-            atualizarStats() {
-                const total = this.alunos.length;
-                const receita = total * 80;
-                const vencidos = this.alunos.filter(a => this.calcularDias(a.vencimento) < 0).length;
-
-                document.getElementById('totalAlunos').textContent = total;
-                document.getElementById('receitaMensal').textContent = `R$ ${receita.toLocaleString('pt-BR')}`;
-                document.getElementById('alunosAtivos').textContent = total - vencidos;
-                document.getElementById('alunosVencidos').textContent = vencidos;
-            }
-
-            enviarZap(id) {
-                const aluno = this.alunos.find(a => a.id === id);
-                if (!aluno) return;
-
-                const phone = aluno.telefone.replace(/\D/g, '');
-                const msg = `Olá ${aluno.nome}, tudo bem? 🏋️‍♂️\n\nPassando para lembrar sobre a mensalidade da *Contorno do Corpo*.\n\nVencimento: *${this.formatarData(aluno.vencimento)}*\nValor: R$ ${aluno.valor},00\n\n💳 Chave Pix: 31991639752\n\nQualquer dúvida estou à disposição!`;
-                
-                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-            }
-
-            abrirModal() {
-                this.editandoId = null;
-                document.getElementById('modalTitle').textContent = "Novo Aluno";
-                document.getElementById('formAluno').reset();
-                document.getElementById('btnDelete').style.display = 'none';
-                
-                const hoje = new Date();
-                hoje.setDate(hoje.getDate() + 30);
-                document.getElementById('inputVencimento').value = hoje.toISOString().split('T')[0];
-                
-                document.getElementById('modalAluno').style.display = 'flex';
+            novoAluno() {
+                this.editando = null;
+                document.getElementById('modalTitle').innerText = "Novo Aluno";
+                document.getElementById('btnDel').style.display = 'none';
+                document.getElementById('fNome').value = '';
+                document.getElementById('fTel').value = '';
+                document.getElementById('fVenc').value = new Date().toISOString().split('T')[0];
+                document.getElementById('modalForm').style.display = 'flex';
             }
 
             editar(id) {
-                const aluno = this.alunos.find(a => a.id === id);
-                this.editandoId = id;
-                document.getElementById('modalTitle').textContent = "Editar Aluno";
-                document.getElementById('inputNome').value = aluno.nome;
-                document.getElementById('inputTelefone').value = aluno.telefone;
-                document.getElementById('inputVencimento').value = aluno.vencimento;
-                document.getElementById('btnDelete').style.display = 'block';
-                document.getElementById('modalAluno').style.display = 'flex';
+                this.editando = id;
+                const a = this.alunos.find(al => al.id === id);
+                document.getElementById('modalTitle').innerText = "Editar Aluno";
+                document.getElementById('btnDel').style.display = 'block';
+                document.getElementById('fNome').value = a.nome;
+                document.getElementById('fTel').value = a.telefone;
+                document.getElementById('fVenc').value = a.vencimento;
+                document.getElementById('fValor').value = a.valor;
+                document.getElementById('modalForm').style.display = 'flex';
             }
 
-            excluirAtual() {
-                if(this.editandoId && confirm('Deseja realmente remover este aluno?')) {
-                    this.alunos = this.alunos.filter(a => a.id !== this.editandoId);
-                    this.salvarStorage();
-                    this.fecharModal();
-                    this.mostrarToast('Aluno removido!');
-                }
-            }
+            salvar() {
+                const dados = {
+                    id: this.editando || Date.now(),
+                    nome: document.getElementById('fNome').value,
+                    telefone: document.getElementById('fTel').value,
+                    vencimento: document.getElementById('fVenc').value,
+                    valor: document.getElementById('fValor').value
+                };
 
-            salvarAluno(e) {
-                e.preventDefault();
-                const nome = document.getElementById('inputNome').value;
-                const telefone = document.getElementById('inputTelefone').value.replace(/\D/g, ''); 
-                const vencimento = document.getElementById('inputVencimento').value;
+                if(!dados.nome || !dados.vencimento) return alert("Preencha Nome e Data!");
 
-                if (this.editandoId) {
-                    const idx = this.alunos.findIndex(a => a.id === this.editandoId);
-                    this.alunos[idx] = { ...this.alunos[idx], nome, telefone, vencimento };
-                    this.mostrarToast('Aluno atualizado!');
+                if(this.editando) {
+                    const idx = this.alunos.findIndex(a => a.id === this.editando);
+                    this.alunos[idx] = dados;
                 } else {
-                    const id = Date.now();
-                    this.alunos.push({ id, nome, telefone, vencimento, valor: 80 });
-                    this.mostrarToast('Aluno cadastrado!');
+                    this.alunos.push(dados);
                 }
 
-                this.fecharModal();
-                this.salvarStorage();
+                this.salvarDB();
+                this.fecharModais();
+                this.toast("Dados salvos!");
             }
 
-            fecharModal() {
-                document.getElementById('modalAluno').style.display = 'none';
+            excluir() {
+                if(!confirm("Excluir este aluno permanentemente?")) return;
+                this.alunos = this.alunos.filter(a => a.id !== this.editando);
+                this.salvarDB();
+                this.fecharModais();
             }
 
-            mostrarToast(msg) {
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.textContent = msg;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
+            salvarDB() {
+                localStorage.setItem('seven77_db', JSON.stringify(this.alunos));
+                this.render();
             }
 
-            // --- SISTEMA DE SYNC ---
-            abrirModalSync() {
-                document.getElementById('modalSync').style.display = 'flex';
-                document.getElementById('syncData').value = '';
+            fecharModais() { document.getElementById('modalForm').style.display = 'none'; }
+
+            atualizarDashboard() {
+                document.getElementById('countTotal').innerText = this.alunos.length;
+                const totalVal = this.alunos.reduce((acc, cur) => acc + Number(cur.valor), 0);
+                document.getElementById('valFaturamento').innerText = `R$ ${totalVal}`;
             }
 
-            exportarDados() {
-                const json = JSON.stringify(this.alunos);
-                // Tenta copiar para o clipboard
-                navigator.clipboard.writeText(json).then(() => {
-                    this.mostrarToast('Código copiado! Cole no WhatsApp.');
-                    document.getElementById('syncData').value = json; // Mostra caso o usuário queira ver
-                }).catch(() => {
-                    document.getElementById('syncData').value = json;
-                    this.mostrarToast('Selecione e copie o texto abaixo.');
-                });
-            }
-
-            importarDados() {
-                try {
-                    const json = document.getElementById('syncData').value;
-                    if(!json) return alert('Cole o código primeiro!');
-                    
-                    const dadosNovos = JSON.parse(json);
-                    if(Array.isArray(dadosNovos)) {
-                        this.alunos = dadosNovos;
-                        this.salvarStorage();
-                        document.getElementById('modalSync').style.display = 'none';
-                        this.mostrarToast('Dados sincronizados com sucesso! 🚀');
-                    } else {
-                        alert('Código inválido!');
-                    }
-                } catch(e) {
-                    alert('Erro ao ler o código. Verifique se copiou tudo.');
-                }
+            toast(m) {
+                const t = document.createElement('div');
+                t.className = 'toast'; t.innerText = m;
+                document.body.appendChild(t);
+                setTimeout(() => t.remove(), 2500);
             }
         }
 
-        const app = new ControleAlunos();
+        const app = new SistemaAcademia();
     </script>
 </body>
 </html>
