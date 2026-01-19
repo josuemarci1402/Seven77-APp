@@ -1,10 +1,10 @@
 // === CONFIGURAÇÃO DO SUPABASE ===
 const SUPABASE_URL = 'https://mszivaeyfajiwndfezzz.supabase.co';
-// GARANTA QUE ESTA É A CHAVE 'ANON' INTEIRA QUE VOCÊ COPIOU:
+// SUA CHAVE (Mantive a que você me mandou que estava certa):
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeml2YWV5ZmFqaXduZGZlenp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4NDY3ODYsImV4cCI6MjA4NDQyMjc4Nn0.xP6GLOCZOibYtlsV1HgD50QNNCbxiPaS9oXuoOJME1Q';
 
-// Inicializa a conexão
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// CORREÇÃO DO ERRO: Usamos 'window.supabase' e nomeamos nossa conexão de 'banco'
+const banco = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Variável local
 let alunos = [];
@@ -18,19 +18,19 @@ async function renderizar() {
     const lista = document.getElementById('lista-alunos');
     const termo = document.getElementById('busca').value.toLowerCase();
     
-    // Tenta conectar
-    const { data, error } = await supabase
+    // Agora usamos 'banco' em vez de 'supabase'
+    const { data, error } = await banco
         .from('alunos')
         .select('*')
         .order('vencimento', { ascending: true });
 
     if (error) {
-        alert('ERRO DE CONEXÃO: ' + error.message); // AVISA SE A CONEXÃO FALHAR
+        alert('ERRO DE CONEXÃO: ' + error.message);
         console.error(error);
         return;
     }
 
-    alunos = data; 
+    alunos = data || []; // Garante que é array
     lista.innerHTML = '';
     
     let totalReceita = 0, contaAtivos = 0, contaVencidos = 0;
@@ -97,7 +97,7 @@ async function renderizar() {
     document.getElementById('stat-receita').innerText = totalReceita.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-// === 2. SALVAR COM DIAGNÓSTICO ===
+// === 2. SALVAR ===
 async function salvarAluno() {
     const id = document.getElementById('edit-id').value;
     const nome = document.getElementById('input-nome').value.toUpperCase();
@@ -109,29 +109,29 @@ async function salvarAluno() {
 
     const btn = document.querySelector('#modal button.grad-purple');
     const textoOriginal = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testando...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
     btn.disabled = true;
 
     try {
         let error;
         if (id) {
-            const { error: err } = await supabase.from('alunos').update({ nome, telefone, valor, vencimento }).eq('id', id);
+            // Usa 'banco'
+            const { error: err } = await banco.from('alunos').update({ nome, telefone, valor, vencimento }).eq('id', id);
             error = err;
         } else {
-            const { error: err } = await supabase.from('alunos').insert([{ nome, telefone, valor, vencimento }]);
+            // Usa 'banco'
+            const { error: err } = await banco.from('alunos').insert([{ nome, telefone, valor, vencimento }]);
             error = err;
         }
 
-        if (error) {
-            throw error; // Joga o erro para o alerta
-        }
+        if (error) throw error;
 
-        alert("SUCESSO! Aluno salvo."); // Confirmação visual
+        alert("SUCESSO! Aluno salvo.");
         fecharModal();
-        renderizar();
+        await renderizar(); 
 
     } catch (err) {
-        alert('ERRO AO SALVAR: ' + err.message + '\n\nVerifique se o banco foi destravado.');
+        alert('ERRO AO SALVAR: ' + err.message);
         console.error(err);
     } finally {
         btn.innerHTML = textoOriginal;
@@ -145,13 +145,13 @@ async function renovarAluno(id, dataAtualStr, nome) {
     const dataAtual = new Date(dataAtualStr + "T00:00:00");
     dataAtual.setMonth(dataAtual.getMonth() + 1);
     const novaData = dataAtual.toISOString().split('T')[0];
-    const { error } = await supabase.from('alunos').update({ vencimento: novaData }).eq('id', id);
+    const { error } = await banco.from('alunos').update({ vencimento: novaData }).eq('id', id);
     if (error) alert('Erro: ' + error.message); else renderizar();
 }
 
 async function removerAluno(id) {
     if (confirm("Apagar permanentemente?")) {
-        const { error } = await supabase.from('alunos').delete().eq('id', id);
+        const { error } = await banco.from('alunos').delete().eq('id', id);
         if (error) alert('Erro: ' + error.message); else renderizar();
     }
 }
