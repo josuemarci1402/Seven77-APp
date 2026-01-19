@@ -5,147 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>SEVEN77 | Hyper Premium</title>
-    <style>
-        body { background: #0f1115; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .neon-purple { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .grad-purple { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <title>SEVEN77 | Gestão Pro</title>
 </head>
-<body class="p-4 md:p-8 max-w-2xl mx-auto">
+<body class="p-4 md:p-8 max-w-2xl mx-auto pb-24">
 
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 grad-purple rounded-xl flex items-center justify-center neon-purple">
-                <i class="fas fa-dumbbell text-white"></i>
+            <div class="w-12 h-12 grad-purple rounded-2xl flex items-center justify-center neon-purple shadow-lg">
+                <i class="fas fa-dumbbell text-white text-xl"></i>
             </div>
-            <h1 class="text-xl font-black tracking-tighter italic">SEVEN77</h1>
+            <div>
+                <h1 class="text-2xl font-black tracking-tighter italic text-white">SEVEN77</h1>
+                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Sistema de Gestão</p>
+            </div>
         </div>
-        <button onclick="abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-white/10 transition">
-            <i class="fas fa-plus text-purple-400"></i>
+        <button onclick="abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-purple-500/20 transition border border-white/10">
+            <i class="fas fa-plus text-purple-400 text-lg"></i>
         </button>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-8">
-        <div class="glass p-5 rounded-[2.5rem] relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-16 h-16 grad-purple opacity-10 blur-2xl"></div>
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Ativos</p>
-            <h3 id="stat-ativos" class="text-3xl font-black mt-1">0</h3>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="col-span-2 glass p-6 rounded-[2rem] relative overflow-hidden border border-white/5">
+            <div class="absolute top-0 right-0 w-32 h-32 grad-purple opacity-20 blur-3xl rounded-full"></div>
+            <div class="flex justify-between items-start relative z-10">
+                <div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Receita Mensal Estimada</p>
+                    <h3 id="stat-receita" class="text-4xl font-black text-white tracking-tight">R$ 0,00</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+            </div>
         </div>
-        <div class="glass p-5 rounded-[2.5rem] border-red-500/20">
+
+        <div class="glass p-5 rounded-[2rem] border border-white/5">
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Alunos Ativos</p>
+            <h3 id="stat-ativos" class="text-3xl font-black mt-1 text-white">0</h3>
+        </div>
+        <div class="glass p-5 rounded-[2rem] border border-red-500/20">
             <p class="text-[10px] font-bold text-red-500/60 uppercase tracking-widest">Vencidos</p>
             <h3 id="stat-vencidos" class="text-3xl font-black mt-1 text-red-500">0</h3>
         </div>
     </div>
 
-    <div class="mb-6">
-        <div class="relative mb-4">
-            <input type="text" id="busca" oninput="filtrarAlunos()" placeholder="Buscar aluno..." class="w-full bg-white/5 border border-white/5 p-4 pl-12 rounded-2xl outline-none focus:border-purple-500/50 transition">
-            <i class="fas fa-search absolute left-5 top-5 text-gray-600"></i>
-        </div>
+    <div class="mb-6 relative">
+        <input type="text" id="busca" oninput="renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#1A1D24] border border-white/5 p-4 pl-12 rounded-2xl outline-none focus:border-purple-500/50 text-white placeholder-gray-600 transition">
+        <i class="fas fa-search absolute left-5 top-5 text-gray-600"></i>
     </div>
 
-    <div id="lista-alunos" class="space-y-4">
+    <div id="lista-alunos" class="space-y-3">
         </div>
 
-    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-6">
-        <div class="glass w-full max-w-sm p-8 rounded-[3rem] border-white/10">
-            <h2 class="text-2xl font-black mb-6">Novo Aluno</h2>
-            <input type="text" id="nome-novo" placeholder="Nome do Aluno" class="w-full bg-white/5 p-4 rounded-2xl mb-4 outline-none border border-white/10">
-            <select id="status-novo" class="w-full bg-[#1a1c21] p-4 rounded-2xl mb-6 outline-none border border-white/10 text-gray-400">
-                <option value="ativo">Ativo</option>
-                <option value="vencido">Vencido</option>
-            </select>
-            <div class="flex gap-3">
-                <button onclick="fecharModal()" class="flex-1 p-4 rounded-2xl font-bold text-gray-500">Cancelar</button>
-                <button onclick="adicionarAluno()" class="flex-1 grad-purple p-4 rounded-2xl font-bold shadow-lg">Salvar</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let alunos = JSON.parse(localStorage.getItem('seven77_alunos')) || [
-            { id: 1, nome: "RAYLANDERSON SOUZA", status: "vencido" },
-            { id: 2, nome: "MARCOS OLIVEIRA", status: "ativo" }
-        ];
-
-        const msgBase = encodeURIComponent("⚠️Atenção⚠️\n\nSua mensalidade está em aberto.\nPara evitar o Bloqueio automático do sistema, efetue o pagamento.\n\n💳 Chave Pix: 31991639752\n📩 Comprovante deve ser enviado por aqui.\n🔗NÃO SE ESQUEÇA DE ENVIAR SEU E-MAIL E SENHA DO APLICATIVO PARA RENOVAÇÃO\n\nEqpSeven🛸");
-
-        function renderizar() {
-            const lista = document.getElementById('lista-alunos');
-            lista.innerHTML = '';
+    <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="glass w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative">
+            <button onclick="fecharModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             
-            let ativos = 0, vencidos = 0;
-
-            alunos.forEach(aluno => {
-                aluno.status === 'ativo' ? ativos++ : vencidos++;
+            <h2 class="text-2xl font-black mb-1 text-white">Novo Aluno</h2>
+            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Preencha os dados financeiros</p>
+            
+            <div class="space-y-4">
+                <input type="text" id="novo-nome" placeholder="Nome Completo" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
                 
-                const card = document.createElement('div');
-                card.className = `glass p-4 rounded-[2rem] flex justify-between items-center transition animate-in fade-in duration-500`;
-                card.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 uppercase font-black text-purple-500">
-                            ${aluno.nome.charAt(0)}
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-sm tracking-tight">${aluno.nome}</h4>
-                            <p class="text-[9px] font-black uppercase ${aluno.status === 'vencido' ? 'text-red-500' : 'text-green-500'}">
-                                ${aluno.status}
-                            </p>
-                        </div>
+                <input type="number" id="novo-telefone" placeholder="WhatsApp (DDD + Número)" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-2">Valor (R$)</label>
+                        <input type="number" id="novo-valor" placeholder="ex: 80" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
                     </div>
-                    <div class="flex gap-2">
-                        ${aluno.status === 'vencido' ? `
-                            <a href="https://wa.me/5531991639752?text=${msgBase}" class="w-10 h-10 rounded-xl bg-green-500/20 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                        ` : ''}
-                        <button onclick="removerAluno(${aluno.id})" class="w-10 h-10 rounded-xl bg-white/5 text-gray-600 flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition">
-                            <i class="fas fa-trash-alt text-xs"></i>
-                        </button>
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-2">Vencimento (Dia)</label>
+                        <input type="number" id="novo-vencimento" placeholder="Dia (1-31)" min="1" max="31" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
                     </div>
-                `;
-                lista.appendChild(card);
-            });
+                </div>
+            </div>
 
-            document.getElementById('stat-ativos').innerText = ativos;
-            document.getElementById('stat-vencidos').innerText = vencidos;
-            localStorage.setItem('seven77_alunos', JSON.stringify(alunos));
-        }
+            <button onclick="adicionarAluno()" class="w-full grad-purple p-4 rounded-xl font-bold text-white shadow-lg shadow-purple-900/50 mt-6 hover:scale-[1.02] transition">
+                Salvar Aluno
+            </button>
+        </div>
+    </div>
 
-        function abrirModal() { document.getElementById('modal').classList.remove('hidden'); }
-        function fecharModal() { document.getElementById('modal').classList.add('hidden'); }
-
-        function adicionarAluno() {
-            const nome = document.getElementById('nome-novo').value;
-            const status = document.getElementById('status-novo').value;
-            if(!nome) return alert("Digite o nome");
-            
-            alunos.push({ id: Date.now(), nome: nome.toUpperCase(), status: status });
-            document.getElementById('nome-novo').value = '';
-            fecharModal();
-            renderizar();
-        }
-
-        function removerAluno(id) {
-            if(confirm("Remover aluno?")) {
-                alunos = alunos.filter(a => a.id !== id);
-                renderizar();
-            }
-        }
-
-        function filtrarAlunos() {
-            const termo = document.getElementById('busca').value.toUpperCase();
-            const cards = document.getElementById('lista-alunos').children;
-            Array.from(cards).forEach(card => {
-                const nome = card.querySelector('h4').innerText;
-                card.style.display = nome.includes(termo) ? 'flex' : 'none';
-            });
-        }
-
-        renderizar();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
