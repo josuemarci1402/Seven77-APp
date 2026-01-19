@@ -8,81 +8,86 @@
     <link rel="stylesheet" href="style.css">
     <title>SEVEN77 | Gestão Pro</title>
 </head>
-<body class="p-4 md:p-8 max-w-2xl mx-auto pb-24">
+<body class="p-4 md:p-8 max-w-2xl mx-auto pb-32">
 
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
             <div class="w-12 h-12 grad-purple rounded-2xl flex items-center justify-center neon-purple shadow-lg">
                 <i class="fas fa-dumbbell text-white text-xl"></i>
             </div>
             <div>
                 <h1 class="text-2xl font-black tracking-tighter italic text-white">SEVEN77</h1>
-                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Sistema de Gestão</p>
+                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Painel de Controle</p>
             </div>
         </div>
-        <button onclick="abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-purple-500/20 transition border border-white/10">
-            <i class="fas fa-plus text-purple-400 text-lg"></i>
+        <button onclick="abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-purple-500/20 transition border border-white/10 group">
+            <i class="fas fa-plus text-purple-400 text-lg group-hover:scale-110 transition"></i>
         </button>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-4">
-        <div class="col-span-2 glass p-6 rounded-[2rem] relative overflow-hidden border border-white/5">
-            <div class="absolute top-0 right-0 w-32 h-32 grad-purple opacity-20 blur-3xl rounded-full"></div>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="col-span-2 glass p-6 rounded-[2rem] relative overflow-hidden border border-white/5 bg-gradient-to-r from-white/5 to-transparent">
             <div class="flex justify-between items-start relative z-10">
                 <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Receita Mensal Estimada</p>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Faturamento Mensal</p>
                     <h3 id="stat-receita" class="text-4xl font-black text-white tracking-tight">R$ 0,00</h3>
                 </div>
-                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400">
-                    <i class="fas fa-chart-line"></i>
+                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+                    <i class="fas fa-wallet"></i>
                 </div>
             </div>
         </div>
-
-        <div class="glass p-5 rounded-[2rem] border border-white/5">
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Alunos Ativos</p>
-            <h3 id="stat-ativos" class="text-3xl font-black mt-1 text-white">0</h3>
+        <div class="glass p-4 rounded-[2rem] border border-white/5 text-center">
+            <h3 id="stat-ativos" class="text-2xl font-black text-white">0</h3>
+            <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Em Dia</p>
         </div>
-        <div class="glass p-5 rounded-[2rem] border border-red-500/20">
-            <p class="text-[10px] font-bold text-red-500/60 uppercase tracking-widest">Vencidos</p>
-            <h3 id="stat-vencidos" class="text-3xl font-black mt-1 text-red-500">0</h3>
+        <div class="glass p-4 rounded-[2rem] border border-red-500/20 text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-red-500/5"></div>
+            <h3 id="stat-vencidos" class="text-2xl font-black text-red-500">0</h3>
+            <p class="text-[9px] font-bold text-red-400/60 uppercase tracking-widest">Vencidos</p>
         </div>
     </div>
 
-    <div class="mb-6 relative">
-        <input type="text" id="busca" oninput="renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#1A1D24] border border-white/5 p-4 pl-12 rounded-2xl outline-none focus:border-purple-500/50 text-white placeholder-gray-600 transition">
-        <i class="fas fa-search absolute left-5 top-5 text-gray-600"></i>
+    <div class="mb-6 relative group">
+        <input type="text" id="busca" oninput="renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#16181c] border border-white/5 p-4 pl-12 rounded-2xl outline-none focus:border-purple-500/50 text-white placeholder-gray-600 transition shadow-inner">
+        <i class="fas fa-search absolute left-5 top-5 text-gray-600 group-focus-within:text-purple-500 transition"></i>
     </div>
 
-    <div id="lista-alunos" class="space-y-3">
+    <div id="lista-alunos" class="space-y-4">
         </div>
 
-    <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative">
+    <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="glass w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative transform transition-all scale-100">
             <button onclick="fecharModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             
-            <h2 class="text-2xl font-black mb-1 text-white">Novo Aluno</h2>
-            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Preencha os dados financeiros</p>
+            <h2 id="modal-titulo" class="text-2xl font-black mb-1 text-white">Novo Aluno</h2>
+            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Dados do Contrato</p>
             
-            <div class="space-y-4">
-                <input type="text" id="novo-nome" placeholder="Nome Completo" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
+            <input type="hidden" id="edit-id"> <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Nome Completo</label>
+                    <input type="text" id="input-nome" class="w-full bg-[#16181c] p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition focus:ring-1 focus:ring-purple-500/50">
+                </div>
                 
-                <input type="number" id="novo-telefone" placeholder="WhatsApp (DDD + Número)" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">WhatsApp</label>
+                    <input type="tel" id="input-telefone" placeholder="31999999999" class="w-full bg-[#16181c] p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition focus:ring-1 focus:ring-purple-500/50">
+                </div>
                 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-2">Valor (R$)</label>
-                        <input type="number" id="novo-valor" placeholder="ex: 80" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
+                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Valor (R$)</label>
+                        <input type="number" id="input-valor" class="w-full bg-[#16181c] p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition text-center font-bold">
                     </div>
                     <div>
-                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-2">Vencimento (Dia)</label>
-                        <input type="number" id="novo-vencimento" placeholder="Dia (1-31)" min="1" max="31" class="w-full bg-[#1A1D24] p-4 rounded-xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
+                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Vencimento</label>
+                        <input type="date" id="input-vencimento" class="w-full bg-[#16181c] p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition text-center text-sm appearance-none">
                     </div>
                 </div>
             </div>
 
-            <button onclick="adicionarAluno()" class="w-full grad-purple p-4 rounded-xl font-bold text-white shadow-lg shadow-purple-900/50 mt-6 hover:scale-[1.02] transition">
-                Salvar Aluno
+            <button onclick="salvarAluno()" class="w-full grad-purple p-4 rounded-2xl font-bold text-white shadow-lg shadow-purple-900/40 mt-8 hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2">
+                <i class="fas fa-check"></i> Salvar Alterações
             </button>
         </div>
     </div>
