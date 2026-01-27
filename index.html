@@ -9,69 +9,115 @@
     <style>
         body { background: #0f1115; color: white; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        /* Animação suave */
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="p-4 md:p-8 max-w-2xl mx-auto pb-32 font-sans">
+<body class="p-4 md:p-8 max-w-2xl mx-auto pb-32 font-sans selection:bg-purple-500 selection:text-white">
 
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <div class="w-12 h-12 bg-gradient-to-br from-[#6366f1] to-[#a855f7] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)]">
                 <i class="fas fa-dumbbell text-white text-xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-black italic">SEVEN77</h1>
+                <h1 class="text-2xl font-black italic tracking-tighter">SEVEN77</h1>
                 <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Painel de Controle</p>
             </div>
         </div>
-        <button onclick="window.abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-purple-500/20 transition">
+        <button onclick="window.abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-purple-500/20 transition active:scale-95 border border-white/10">
             <i class="fas fa-plus text-purple-400 text-lg"></i>
         </button>
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-6">
-        <div class="col-span-2 glass p-6 rounded-[2rem]">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Faturamento Mensal</p>
-            <h3 id="stat-receita" class="text-4xl font-black tracking-tight">R$ 0,00</h3>
+        <div class="col-span-2 glass p-6 rounded-[2rem] relative overflow-hidden bg-gradient-to-r from-white/5 to-transparent">
+            <div class="relative z-10">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Faturamento Mensal</p>
+                <h3 id="stat-receita" class="text-4xl font-black tracking-tight text-white">R$ 0,00</h3>
+            </div>
+            <div class="absolute right-4 top-4 w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                <i class="fas fa-wallet text-xl"></i>
+            </div>
         </div>
         <div class="glass p-4 rounded-[2rem] text-center">
             <h3 id="stat-ativos" class="text-2xl font-black">0</h3>
             <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Em Dia</p>
         </div>
-        <div class="glass p-4 rounded-[2rem] text-center border border-red-500/30 bg-red-500/5">
-            <h3 id="stat-vencidos" class="text-2xl font-black text-red-500">0</h3>
-            <p class="text-[9px] font-bold text-red-400 uppercase tracking-widest">Vencidos</p>
+        <div class="glass p-4 rounded-[2rem] text-center border border-red-500/30 bg-red-500/5 relative overflow-hidden">
+            <div class="absolute inset-0 bg-red-500/5 blur-xl"></div>
+            <h3 id="stat-vencidos" class="text-2xl font-black text-red-500 relative z-10">0</h3>
+            <p class="text-[9px] font-bold text-red-400/60 uppercase tracking-widest relative z-10">Vencidos</p>
         </div>
     </div>
 
-    <div class="mb-6">
-        <input type="text" id="busca" oninput="window.renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#16181c] border border-white/10 p-4 pl-4 rounded-2xl outline-none text-white focus:border-purple-500 transition">
+    <div class="mb-6 relative">
+        <input type="text" id="busca" oninput="window.renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#16181c] border border-white/10 p-4 pl-12 rounded-2xl outline-none text-white focus:border-purple-500 transition shadow-inner placeholder-gray-600">
+        <i class="fas fa-search absolute left-5 top-5 text-gray-500"></i>
     </div>
 
-    <div id="lista-alunos" class="space-y-4 text-center text-gray-500 animate-pulse">
-        Carregando dados do servidor...
+    <div id="lista-alunos" class="space-y-4 pb-20">
+        <p class="text-center text-gray-600 animate-pulse text-sm">Carregando...</p>
     </div>
 
-    <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-[#16181c] w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 relative">
-            <button onclick="window.fecharModal()" class="absolute top-6 right-6 text-gray-500"><i class="fas fa-times text-xl"></i></button>
-            <h2 id="modal-titulo" class="text-2xl font-black mb-6">Novo Aluno</h2>
+    <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-50 flex items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-[#16181c] w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative overflow-y-auto max-h-[90vh]">
+            <button onclick="window.fecharModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            
+            <h2 id="modal-titulo" class="text-2xl font-black mb-1 text-white">Novo Aluno</h2>
+            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Preencha os dados</p>
+            
             <input type="hidden" id="edit-id">
+
             <div class="space-y-4">
-                <input type="text" id="input-nome" placeholder="Nome" class="w-full bg-black/30 p-4 rounded-xl border border-white/10 text-white">
-                <input type="tel" id="input-telefone" placeholder="WhatsApp (3199...)" class="w-full bg-black/30 p-4 rounded-xl border border-white/10 text-white">
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Nome do Aluno</label>
+                    <input type="text" id="input-nome" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition focus:bg-white/5">
+                </div>
+                
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">WhatsApp</label>
+                    <input type="tel" id="input-telefone" placeholder="31999999999" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition focus:bg-white/5">
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="number" id="input-valor" placeholder="Valor" class="w-full bg-black/30 p-4 rounded-xl border border-white/10 text-white text-center">
-                    <input type="date" id="input-vencimento" class="w-full bg-black/30 p-4 rounded-xl border border-white/10 text-white text-center">
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Valor (R$)</label>
+                        <input type="number" id="input-valor" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition text-center font-bold">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Vencimento</label>
+                        <input type="date" id="input-vencimento" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition text-center text-sm">
+                    </div>
+                </div>
+
+                <div class="pt-4 mt-4 border-t border-white/5">
+                    <p class="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-3 ml-1"><i class="fas fa-key mr-1"></i> Acesso do Aplicativo</p>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">E-mail / Usuário</label>
+                            <input type="text" id="input-email-app" placeholder="ex: joao@tv.com" class="w-full bg-purple-500/5 p-4 rounded-2xl outline-none border border-purple-500/20 text-white focus:border-purple-500 transition">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Senha</label>
+                            <input type="text" id="input-senha-app" placeholder="ex: 123456" class="w-full bg-purple-500/5 p-4 rounded-2xl outline-none border border-purple-500/20 text-white focus:border-purple-500 transition">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button onclick="window.salvarAluno()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 p-4 rounded-xl font-bold mt-6 shadow-lg">Salvar</button>
+
+            <button onclick="window.salvarAluno()" class="w-full bg-gradient-to-r from-[#6366f1] to-[#a855f7] p-4 rounded-2xl font-bold text-white shadow-lg shadow-purple-900/40 mt-8 hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2">
+                <i class="fas fa-check"></i> Salvar Tudo
+            </button>
         </div>
     </div>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-        // --- VERIFIQUE SE ESSAS CHAVES ESTÃO IGUAIS AO SEU SUPABASE ---
+        // SUAS CHAVES (Já configuradas)
         const SUPABASE_URL = 'https://mszivaeyfajiwndfezzz.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeml2YWV5ZmFqaXduZGZlenp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4NDY3ODYsImV4cCI6MjA4NDQyMjc4Nn0.xP6GLOCZOibYtlsV1HgD50QNNCbxiPaS9oXuoOJME1Q';
 
@@ -81,34 +127,34 @@
         const msgCobrar = (nome) => encodeURIComponent(`⚠️ Atenção ${nome} ⚠️\n\nSua mensalidade está em aberto.\nPara evitar o Bloqueio automático do sistema, efetue o pagamento.\n\n💳 Chave Pix: 31991639752\n📩 Comprovante deve ser enviado por aqui.\n🔗 NÃO SE ESQUEÇA DE ENVIAR SEU E-MAIL E SENHA DO APLICATIVO PARA RENOVAÇÃO\n\nEqpSeven🛸`);
         const msgOla = (nome) => encodeURIComponent(`Olá ${nome}, tudo bem? 🛸\nPassando para saber como estão os treinos na SEVEN77!`);
 
+        // Função para copiar texto
+        window.copiarTexto = function(texto) {
+            if(!texto) return alert("Nada para copiar!");
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("Copiado: " + texto);
+            });
+        }
+
         window.renderizar = async function() {
             const lista = document.getElementById('lista-alunos');
             const termo = document.getElementById('busca').value.toLowerCase();
             
-            // Tenta buscar no banco
             const { data, error } = await banco.from('alunos').select('*').order('vencimento', { ascending: true });
 
-            // SE DER ERRO, MOSTRA NA TELA EM VERMELHO
             if (error) {
                 console.error(error);
-                lista.innerHTML = `
-                    <div class="p-4 bg-red-500/20 border border-red-500 rounded-xl text-red-200 text-sm">
-                        <strong>ERRO DE CONEXÃO:</strong><br>
-                        ${error.message}<br><br>
-                        <em>Verifique se a tabela 'alunos' existe e se o RLS está desativado.</em>
-                    </div>
-                `;
+                lista.innerHTML = `<p class="text-center text-red-500">Erro: ${error.message}</p>`;
                 return;
             }
 
-            if (!data || data.length === 0) {
-                lista.innerHTML = `<p class="text-center text-gray-500 mt-10">Nenhum aluno encontrado no banco.</p>`;
-                alunos = [];
-            } else {
-                alunos = data;
-                lista.innerHTML = ''; // Limpa o "Carregando..."
-            }
+            alunos = data || [];
+            lista.innerHTML = '';
             
+            if (alunos.length === 0) {
+                lista.innerHTML = `<p class="text-center text-gray-600 mt-10">Nenhum aluno cadastrado.</p>`;
+                return;
+            }
+
             let totalReceita = 0, contaAtivos = 0, contaVencidos = 0;
             
             alunos.forEach(aluno => {
@@ -126,28 +172,55 @@
                 if(isVencido) contaVencidos++; else contaAtivos++;
                 totalReceita += parseFloat(aluno.valor);
 
+                const borderClass = isVencido ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.15)] bg-red-500/5' : 'border-white/5';
                 const statusColor = isVencido ? 'text-red-500' : 'text-green-500';
                 const statusTexto = isVencido ? 'VENCIDO' : (diasRestantes === 0 ? 'VENCE HOJE' : `VENCE EM ${diasRestantes} DIAS`);
-                const borderClass = isVencido ? 'border-red-500/50 bg-red-500/5' : 'border-white/5';
+
                 const dia = String(dataVenc.getDate()).padStart(2, '0');
                 const mes = String(dataVenc.getMonth() + 1).padStart(2, '0');
 
+                // Dados do App (Se não tiver, mostra tracinho)
+                const emailApp = aluno.email_app || '---';
+                const senhaApp = aluno.senha_app || '---';
+
                 const html = `
-                    <div class="glass p-5 rounded-[2rem] flex flex-col gap-4 border transition ${borderClass}">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-black/40 flex flex-col items-center justify-center border border-white/10">
-                                <span class="text-[10px] text-gray-500 font-bold uppercase">Vence</span>
-                                <span class="text-lg font-black text-white leading-none">${dia}</span>
-                                <span class="text-[8px] text-gray-600 font-bold uppercase">${mes}</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-white text-lg leading-tight">${aluno.nome}</h4>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-[10px] font-black uppercase ${statusColor} bg-black/40 px-2 py-1 rounded-lg border border-white/5">${statusTexto}</span>
-                                    <span class="text-[11px] text-gray-400 font-bold">R$ ${parseFloat(aluno.valor).toFixed(2)}</span>
+                    <div class="glass p-5 rounded-[2rem] flex flex-col gap-4 border transition ${borderClass} fade-in">
+                        
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-[#16181c] flex flex-col items-center justify-center border border-white/10 shadow-inner">
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase">Vence</span>
+                                    <span class="text-lg font-black text-white leading-none">${dia}</span>
+                                    <span class="text-[8px] text-gray-600 font-bold uppercase">${mes}</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg leading-tight">${aluno.nome}</h4>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="text-[10px] font-black uppercase ${statusColor} bg-black/40 px-2 py-1 rounded-lg border border-white/5">${statusTexto}</span>
+                                        <span class="text-[11px] text-gray-400 font-bold">R$ ${parseFloat(aluno.valor).toFixed(2)}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="bg-black/30 rounded-xl p-3 border border-white/5 flex flex-col gap-2">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2 overflow-hidden">
+                                    <i class="fas fa-envelope text-purple-400 text-xs"></i>
+                                    <span class="text-xs text-gray-300 font-mono truncate">${emailApp}</span>
+                                </div>
+                                <button onclick="window.copiarTexto('${emailApp}')" class="text-gray-500 hover:text-white px-2"><i class="fas fa-copy text-xs"></i></button>
+                            </div>
+                            <div class="h-[1px] bg-white/5 w-full"></div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-key text-purple-400 text-xs"></i>
+                                    <span class="text-xs text-gray-300 font-mono">${senhaApp}</span>
+                                </div>
+                                <button onclick="window.copiarTexto('${senhaApp}')" class="text-gray-500 hover:text-white px-2"><i class="fas fa-copy text-xs"></i></button>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-4 gap-2 pt-2 border-t border-white/5 mt-1">
                             <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-green-600 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
                             <button onclick="window.renovarAluno(${aluno.id}, '${aluno.vencimento}', '${aluno.nome}')" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-blue-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-sync-alt"></i></button>
@@ -170,9 +243,13 @@
             const telefone = document.getElementById('input-telefone').value.replace(/\D/g, '');
             const valor = document.getElementById('input-valor').value;
             const vencimento = document.getElementById('input-vencimento').value;
-
-            if (!nome || !valor || !vencimento) return alert("Preencha todos os campos!");
             
+            // Novos Campos
+            const email_app = document.getElementById('input-email-app').value;
+            const senha_app = document.getElementById('input-senha-app').value;
+
+            if (!nome || !valor || !vencimento) return alert("Preencha os campos obrigatórios!");
+
             const btn = document.querySelector('#modal button');
             const originalText = btn.innerHTML;
             btn.innerHTML = 'Salvando...';
@@ -180,13 +257,16 @@
 
             try {
                 let error;
+                const dados = { nome, telefone, valor, vencimento, email_app, senha_app };
+
                 if (id) {
-                    const res = await banco.from('alunos').update({ nome, telefone, valor, vencimento }).eq('id', id);
+                    const res = await banco.from('alunos').update(dados).eq('id', id);
                     error = res.error;
                 } else {
-                    const res = await banco.from('alunos').insert([{ nome, telefone, valor, vencimento }]);
+                    const res = await banco.from('alunos').insert([dados]);
                     error = res.error;
                 }
+
                 if (error) throw error;
                 window.fecharModal();
                 window.renderizar();
@@ -220,15 +300,46 @@
             if(!aluno) return;
             document.getElementById('modal-titulo').innerText = "Editar Aluno";
             document.getElementById('edit-id').value = aluno.id;
+            
+            // Preenche Campos
             document.getElementById('input-nome').value = aluno.nome;
             document.getElementById('input-telefone').value = aluno.telefone;
             document.getElementById('input-valor').value = aluno.valor;
             document.getElementById('input-vencimento').value = aluno.vencimento;
+            
+            // Preenche Campos Novos
+            document.getElementById('input-email-app').value = aluno.email_app || '';
+            document.getElementById('input-senha-app').value = aluno.senha_app || '';
+
             window.abrirModal();
         }
 
-        window.abrirModal = function() { document.getElementById('modal').classList.remove('hidden'); if(document.getElementById('modal-titulo').innerText !== "Editar Aluno") { document.getElementById('edit-id').value=""; document.getElementById('input-nome').value=""; document.getElementById('input-telefone').value=""; document.getElementById('input-valor').value=""; document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0]; } }
-        window.fecharModal = function() { document.getElementById('modal').classList.add('hidden'); setTimeout(() => { document.getElementById('modal-titulo').innerText="Novo Aluno"; document.getElementById('edit-id').value=""; }, 300); }
+        window.abrirModal = function() { 
+            document.getElementById('modal').classList.remove('hidden'); 
+            if(document.getElementById('modal-titulo').innerText !== "Editar Aluno") { 
+                limparForm();
+            } 
+        }
+        
+        window.fecharModal = function() { 
+            document.getElementById('modal').classList.add('hidden'); 
+            setTimeout(() => { 
+                document.getElementById('modal-titulo').innerText="Novo Aluno"; 
+                document.getElementById('edit-id').value=""; 
+                limparForm();
+            }, 300); 
+        }
+
+        function limparForm() {
+            document.getElementById('edit-id').value = "";
+            document.getElementById('input-nome').value = "";
+            document.getElementById('input-telefone').value = "";
+            document.getElementById('input-valor').value = "";
+            document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0];
+            // Limpa novos campos
+            document.getElementById('input-email-app').value = "";
+            document.getElementById('input-senha-app').value = "";
+        }
 
         window.renderizar();
     </script>
