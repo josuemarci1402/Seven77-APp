@@ -91,7 +91,7 @@
             <button class="num-pad-btn" onclick="addPin(0)">0</button>
             <button class="num-pad-btn text-base" onclick="clearPin()"><i class="fas fa-backspace"></i></button>
         </div>
-        <p class="text-xs text-gray-500 mt-8 uppercase tracking-widest font-bold">Digite a Senha (1234)</p>
+        <p class="text-xs text-gray-500 mt-8 uppercase tracking-widest font-bold">Digite a Senha</p>
     </div>
 
     <div id="app-content" class="p-4 md:p-8 max-w-2xl mx-auto pb-32 opacity-0 transition-opacity duration-1000 hidden">
@@ -141,7 +141,7 @@
                 <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
                     <div id="bar-progresso" class="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_#a855f7]" style="width: 0%"></div>
                 </div>
-                <p class="text-[10px] text-gray-500 mt-2 text-right">Meta: <span id="text-meta">100</span> alunos</p>
+                <p class="text-[10px] text-gray-500 mt-2 text-right">Meta: <span id="text-meta">150</span> alunos</p>
             </div>
         </div>
 
@@ -219,8 +219,7 @@
         let alunos = [];
         let filtroAtivo = 'todos';
         
-        // --- SENHA DE BLOQUEIO ---
-        // Aqui você define sua senha. Pode ser 2026, 7777, etc.
+        // --- SENHA DE BLOQUEIO (ATUALIZADA) ---
         const SENHA_MESTRA = "1403"; 
         let pinAtual = "";
 
@@ -306,7 +305,7 @@
             filtroAtivo = tipo;
             ['todos', 'ativos', 'vencidos'].forEach(t => {
                 const btn = document.getElementById(`btn-${t}`);
-                if (t === tipo) btn.className = "px-6 py-3 rounded-2xl text-xs font-bold bg-white text-black shadow-lg transition-transform scale-105";
+                if (t === tipo) btn.className = "px-6 py-3 rounded-2xl text-xs font-bold bg-white text-black shadow-lg transition-transform hover:scale-105";
                 else btn.className = "px-6 py-3 rounded-2xl text-xs font-bold glass text-gray-400 hover:text-white transition-all";
             });
             window.renderizar();
