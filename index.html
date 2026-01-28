@@ -9,7 +9,6 @@
     <style>
         body { background: #0f1115; color: white; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        /* Animação suave */
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -124,7 +123,24 @@
         const banco = createClient(SUPABASE_URL, SUPABASE_KEY);
         let alunos = [];
 
-        const msgCobrar = (nome) => encodeURIComponent(`⚠️ Atenção ${nome} ⚠️\n\nSua mensalidade está em aberto.\nPara evitar o Bloqueio automático do sistema, efetue o pagamento.\n\n💳 Chave Pix: 31991639752\n📩 Comprovante deve ser enviado por aqui.\n🔗 NÃO SE ESQUEÇA DE ENVIAR SEU E-MAIL E SENHA DO APLICATIVO PARA RENOVAÇÃO\n\nEqpSeven🛸`);
+        // === CONFIGURAÇÃO DAS CHAVES PIX ===
+        // O sistema vai alternar entre elas automaticamente
+        const CHAVES_PIX = [
+            { chave: "31991639752", nome: "Seven77" },
+            { chave: "0e0d2c39-e752-4a29-be08-1cef25e19f85", nome: "Josnei Lopes" },
+            { chave: "dca2fdcc-dd19-4a5a-afea-f895310250ba", nome: "Wandson" }
+        ];
+
+        // Função Geradora de Mensagem Inteligente
+        const msgCobrar = (nome, chave, beneficiario) => encodeURIComponent(
+            `⚠️ Atenção ${nome} ⚠️\n\n` +
+            `Sua mensalidade está em aberto.\nPara evitar o Bloqueio automático do sistema, efetue o pagamento.\n\n` +
+            `💳 Chave Pix: ${chave}\n` +
+            `👤 Nome: ${beneficiario}\n` +
+            `📩 Comprovante deve ser enviado por aqui.\n` +
+            `🔗 NÃO SE ESQUEÇA DE ENVIAR SEU E-MAIL E SENHA DO APLICATIVO PARA RENOVAÇÃO\n\nEqpSeven🛸`
+        );
+
         const msgOla = (nome) => encodeURIComponent(`Olá ${nome}, tudo bem? 🛸\nPassando para saber como estão os treinos na SEVEN77!`);
 
         // Função para copiar texto
@@ -179,9 +195,14 @@
                 const dia = String(dataVenc.getDate()).padStart(2, '0');
                 const mes = String(dataVenc.getMonth() + 1).padStart(2, '0');
 
-                // Dados do App (Se não tiver, mostra tracinho)
+                // Dados do App
                 const emailApp = aluno.email_app || '---';
                 const senhaApp = aluno.senha_app || '---';
+
+                // LÓGICA DE DISTRIBUIÇÃO DE PIX (RODIZIO BASEADO NO ID)
+                // Pega o ID, divide por 3 e vê o resto (0, 1 ou 2)
+                const indicePix = aluno.id % 3; 
+                const pixSelecionado = CHAVES_PIX[indicePix];
 
                 const html = `
                     <div class="glass p-5 rounded-[2rem] flex flex-col gap-4 border transition ${borderClass} fade-in">
@@ -222,7 +243,7 @@
                         </div>
 
                         <div class="grid grid-cols-4 gap-2 pt-2 border-t border-white/5 mt-1">
-                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-green-600 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
+                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, pixSelecionado.chave, pixSelecionado.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-green-600 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
                             <button onclick="window.renovarAluno(${aluno.id}, '${aluno.vencimento}', '${aluno.nome}')" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-blue-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-sync-alt"></i></button>
                             <button onclick="window.editarAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-purple-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-pen"></i></button>
                             <button onclick="window.removerAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-red-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-trash"></i></button>
@@ -243,8 +264,6 @@
             const telefone = document.getElementById('input-telefone').value.replace(/\D/g, '');
             const valor = document.getElementById('input-valor').value;
             const vencimento = document.getElementById('input-vencimento').value;
-            
-            // Novos Campos
             const email_app = document.getElementById('input-email-app').value;
             const senha_app = document.getElementById('input-senha-app').value;
 
@@ -306,8 +325,6 @@
             document.getElementById('input-telefone').value = aluno.telefone;
             document.getElementById('input-valor').value = aluno.valor;
             document.getElementById('input-vencimento').value = aluno.vencimento;
-            
-            // Preenche Campos Novos
             document.getElementById('input-email-app').value = aluno.email_app || '';
             document.getElementById('input-senha-app').value = aluno.senha_app || '';
 
@@ -336,7 +353,6 @@
             document.getElementById('input-telefone').value = "";
             document.getElementById('input-valor').value = "";
             document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0];
-            // Limpa novos campos
             document.getElementById('input-email-app').value = "";
             document.getElementById('input-senha-app').value = "";
         }
