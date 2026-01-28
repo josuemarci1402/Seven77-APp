@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEVEN77 | Gestão Pro</title>
+    <title>SEVEN77 | Gestão Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #0f1115; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .fade-in { animation: fadeIn 0.3s ease-in; }
+        body { background: #0f1115; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Classe para borrar dados sensíveis */
+        .blur-mode .sensitive { filter: blur(6px); transition: filter 0.3s; user-select: none; }
+        .blur-mode .sensitive:hover { filter: blur(0px); }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f1115; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
     </style>
 </head>
-<body class="p-4 md:p-8 max-w-2xl mx-auto pb-32 font-sans selection:bg-purple-500 selection:text-white">
+<body class="p-4 md:p-8 max-w-2xl mx-auto pb-32 selection:bg-purple-500 selection:text-white">
 
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
@@ -22,86 +32,100 @@
             </div>
             <div>
                 <h1 class="text-2xl font-black italic tracking-tighter">SEVEN77</h1>
-                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Painel de Controle</p>
+                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Gestão Pro</p>
             </div>
         </div>
-        <button onclick="window.abrirModal()" class="w-12 h-12 glass rounded-2xl flex items-center justify-center hover:bg-purple-500/20 transition active:scale-95 border border-white/10">
-            <i class="fas fa-plus text-purple-400 text-lg"></i>
-        </button>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4 mb-6">
-        <div class="col-span-2 glass p-6 rounded-[2rem] relative overflow-hidden bg-gradient-to-r from-white/5 to-transparent">
-            <div class="relative z-10">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Faturamento Mensal</p>
-                <h3 id="stat-receita" class="text-4xl font-black tracking-tight text-white">R$ 0,00</h3>
-            </div>
-            <div class="absolute right-4 top-4 w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                <i class="fas fa-wallet text-xl"></i>
-            </div>
-        </div>
-        <div class="glass p-4 rounded-[2rem] text-center">
-            <h3 id="stat-ativos" class="text-2xl font-black">0</h3>
-            <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Em Dia</p>
-        </div>
-        <div class="glass p-4 rounded-[2rem] text-center border border-red-500/30 bg-red-500/5 relative overflow-hidden">
-            <div class="absolute inset-0 bg-red-500/5 blur-xl"></div>
-            <h3 id="stat-vencidos" class="text-2xl font-black text-red-500 relative z-10">0</h3>
-            <p class="text-[9px] font-bold text-red-400/60 uppercase tracking-widest relative z-10">Vencidos</p>
+        
+        <div class="flex gap-2">
+            <button onclick="alternarPrivacidade()" class="w-10 h-10 glass rounded-xl flex items-center justify-center hover:bg-white/10 transition text-gray-400 hover:text-white" title="Modo Privacidade">
+                <i class="fas fa-eye" id="icon-eye"></i>
+            </button>
+            <button onclick="exportarBackup()" class="w-10 h-10 glass rounded-xl flex items-center justify-center hover:bg-green-500/20 transition text-gray-400 hover:text-green-400" title="Baixar Backup (Excel)">
+                <i class="fas fa-cloud-download-alt"></i>
+            </button>
+            <button onclick="window.abrirModal()" class="w-12 h-12 bg-white/10 border border-white/10 rounded-xl flex items-center justify-center hover:bg-purple-500 hover:border-purple-500 transition active:scale-95 shadow-lg">
+                <i class="fas fa-plus text-white text-lg"></i>
+            </button>
         </div>
     </div>
 
-    <div class="mb-6 relative">
-        <input type="text" id="busca" oninput="window.renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#16181c] border border-white/10 p-4 pl-12 rounded-2xl outline-none text-white focus:border-purple-500 transition shadow-inner placeholder-gray-600">
-        <i class="fas fa-search absolute left-5 top-5 text-gray-500"></i>
+    <div class="glass p-6 rounded-[2.5rem] mb-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+
+        <div class="relative z-10">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Faturamento Estimado</p>
+                    <h3 id="stat-receita" class="text-4xl font-black tracking-tight text-white sensitive">R$ 0,00</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.1)]">
+                    <i class="fas fa-wallet"></i>
+                </div>
+            </div>
+
+            <div class="mb-2 flex justify-between items-end">
+                <span class="text-xs font-bold text-purple-300">Meta: <span id="text-meta">150</span> Alunos</span>
+                <span id="text-progresso" class="text-xs font-bold text-white">0%</span>
+            </div>
+            <div class="w-full bg-black/40 rounded-full h-3 border border-white/5 overflow-hidden">
+                <div id="bar-progresso" class="bg-gradient-to-r from-purple-600 to-indigo-500 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+            </div>
+            <p class="text-[9px] text-gray-500 mt-2 text-right italic">Continue crescendo! 🚀</p>
+        </div>
     </div>
 
-    <div id="lista-alunos" class="space-y-4 pb-20">
-        <p class="text-center text-gray-600 animate-pulse text-sm">Carregando...</p>
+    <div class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+        <button onclick="filtrar('todos')" id="btn-todos" class="px-5 py-2 rounded-full text-xs font-bold bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all">Todos</button>
+        <button onclick="filtrar('ativos')" id="btn-ativos" class="px-5 py-2 rounded-full text-xs font-bold bg-[#16181c] border border-white/10 text-gray-400 hover:border-green-500/50 hover:text-green-400 transition-all">Em Dia</button>
+        <button onclick="filtrar('vencidos')" id="btn-vencidos" class="px-5 py-2 rounded-full text-xs font-bold bg-[#16181c] border border-white/10 text-gray-400 hover:border-red-500/50 hover:text-red-400 transition-all">Vencidos</button>
+    </div>
+
+    <div class="mb-6 relative group">
+        <input type="text" id="busca" oninput="window.renderizar()" placeholder="Buscar aluno..." class="w-full bg-[#16181c] border border-white/10 p-4 pl-12 rounded-2xl outline-none text-white focus:border-purple-500/50 transition shadow-inner placeholder-gray-600 group-focus-within:bg-black/50">
+        <i class="fas fa-search absolute left-5 top-5 text-gray-500 group-focus-within:text-purple-500 transition"></i>
+    </div>
+
+    <div id="lista-alunos" class="space-y-4 pb-24">
+        <p class="text-center text-gray-600 animate-pulse text-sm mt-10">Carregando dados...</p>
     </div>
 
     <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-50 flex items-center justify-center p-4 transition-all duration-300">
-        <div class="bg-[#16181c] w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative overflow-y-auto max-h-[90vh]">
-            <button onclick="window.fecharModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+        <div class="bg-[#101216] w-full max-w-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl relative overflow-y-auto max-h-[90vh] ring-1 ring-white/5">
+            <button onclick="window.fecharModal()" class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-times"></i></button>
             
             <h2 id="modal-titulo" class="text-2xl font-black mb-1 text-white">Novo Aluno</h2>
-            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Preencha os dados</p>
+            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Ficha Cadastral</p>
             
             <input type="hidden" id="edit-id">
 
             <div class="space-y-4">
                 <div>
                     <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Nome do Aluno</label>
-                    <input type="text" id="input-nome" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition focus:bg-white/5">
+                    <input type="text" id="input-nome" class="w-full bg-black/40 p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
                 </div>
                 
                 <div>
                     <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">WhatsApp</label>
-                    <input type="tel" id="input-telefone" placeholder="31999999999" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition focus:bg-white/5">
+                    <input type="tel" id="input-telefone" placeholder="31999999999" class="w-full bg-black/40 p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Valor (R$)</label>
-                        <input type="number" id="input-valor" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition text-center font-bold">
+                        <input type="number" id="input-valor" class="w-full bg-black/40 p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition text-center font-bold">
                     </div>
                     <div>
                         <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Vencimento</label>
-                        <input type="date" id="input-vencimento" class="w-full bg-black/30 p-4 rounded-2xl outline-none border border-white/10 text-white focus:border-purple-500 transition text-center text-sm">
+                        <input type="date" id="input-vencimento" class="w-full bg-black/40 p-4 rounded-2xl outline-none border border-white/5 text-white focus:border-purple-500 transition text-center text-sm">
                     </div>
                 </div>
 
                 <div class="pt-4 mt-4 border-t border-white/5">
-                    <p class="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-3 ml-1"><i class="fas fa-key mr-1"></i> Acesso do Aplicativo</p>
-                    
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">E-mail / Usuário</label>
-                            <input type="text" id="input-email-app" placeholder="ex: joao@tv.com" class="w-full bg-purple-500/5 p-4 rounded-2xl outline-none border border-purple-500/20 text-white focus:border-purple-500 transition">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-gray-500 uppercase font-bold ml-3 mb-1 block">Senha</label>
-                            <input type="text" id="input-senha-app" placeholder="ex: 123456" class="w-full bg-purple-500/5 p-4 rounded-2xl outline-none border border-purple-500/20 text-white focus:border-purple-500 transition">
+                    <div class="bg-purple-500/5 rounded-2xl p-4 border border-purple-500/10">
+                        <p class="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fas fa-mobile-alt"></i> Acesso do App</p>
+                        <div class="space-y-3">
+                            <input type="text" id="input-email-app" placeholder="E-mail / Login" class="w-full bg-black/20 p-3 rounded-xl outline-none border border-white/5 text-sm text-white focus:border-purple-500/50 transition">
+                            <input type="text" id="input-senha-app" placeholder="Senha de Acesso" class="w-full bg-black/20 p-3 rounded-xl outline-none border border-white/5 text-sm text-white focus:border-purple-500/50 transition">
                         </div>
                     </div>
                 </div>
@@ -116,22 +140,20 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-        // SUAS CHAVES (Já configuradas)
         const SUPABASE_URL = 'https://mszivaeyfajiwndfezzz.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeml2YWV5ZmFqaXduZGZlenp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4NDY3ODYsImV4cCI6MjA4NDQyMjc4Nn0.xP6GLOCZOibYtlsV1HgD50QNNCbxiPaS9oXuoOJME1Q';
 
         const banco = createClient(SUPABASE_URL, SUPABASE_KEY);
         let alunos = [];
+        let filtroAtivo = 'todos'; // todos, ativos, vencidos
 
-        // === CONFIGURAÇÃO DAS CHAVES PIX ===
-        // O sistema vai alternar entre elas automaticamente
+        // --- RODÍZIO DE PIX AUTOMÁTICO ---
         const CHAVES_PIX = [
-            { chave: "31991639752", nome: "Josue Marciano" },
+            { chave: "31991639752", nome: "Seven77" },
             { chave: "0e0d2c39-e752-4a29-be08-1cef25e19f85", nome: "Josnei Lopes" },
-            { chave: "dca2fdcc-dd19-4a5a-afea-f895310250ba", nome: "Wandson Dantas" }
+            { chave: "dca2fdcc-dd19-4a5a-afea-f895310250ba", nome: "Wandson" }
         ];
 
-        // Função Geradora de Mensagem Inteligente
         const msgCobrar = (nome, chave, beneficiario) => encodeURIComponent(
             `⚠️ Atenção ${nome} ⚠️\n\n` +
             `Sua mensalidade está em aberto.\nPara evitar o Bloqueio automático do sistema, efetue o pagamento.\n\n` +
@@ -140,73 +162,117 @@
             `📩 Comprovante deve ser enviado por aqui.\n` +
             `🔗 NÃO SE ESQUEÇA DE ENVIAR SEU E-MAIL E SENHA DO APLICATIVO PARA RENOVAÇÃO\n\nEqpSeven🛸`
         );
+        const msgOla = (nome) => encodeURIComponent(`Olá ${nome}, tudo bem? 🛸\nPassando para saber como estão os treinos na SEVEN77!`);
 
-        const msgOla = (nome) => encodeURIComponent(`Olá ${nome}, tudo bem? 🛸\nPassando para saber como estão os treinos!`);
+        // --- FUNÇÕES DE INTERFACE ---
 
-        // Função para copiar texto
-        window.copiarTexto = function(texto) {
-            if(!texto) return alert("Nada para copiar!");
-            navigator.clipboard.writeText(texto).then(() => {
-                alert("Copiado: " + texto);
-            });
+        // 1. Alternar Privacidade (Blur)
+        window.alternarPrivacidade = function() {
+            document.body.classList.toggle('blur-mode');
+            const icon = document.getElementById('icon-eye');
+            if(document.body.classList.contains('blur-mode')) {
+                icon.className = "fas fa-eye-slash text-purple-400";
+            } else {
+                icon.className = "fas fa-eye";
+            }
         }
 
+        // 2. Exportar Backup (CSV)
+        window.exportarBackup = function() {
+            if(alunos.length === 0) return alert("Nada para exportar!");
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM para acentos
+            csvContent += "ID,Nome,Telefone,Valor,Vencimento,Email App,Senha App\n"; // Cabeçalho
+            
+            alunos.forEach(a => {
+                const row = `${a.id},${a.nome},${a.telefone},${a.valor},${a.vencimento},${a.email_app || ''},${a.senha_app || ''}`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `backup_seven77_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 3. Sistema de Filtros
+        window.filtrar = function(tipo) {
+            filtroAtivo = tipo;
+            // Atualiza visual dos botões
+            ['todos', 'ativos', 'vencidos'].forEach(t => {
+                const btn = document.getElementById(`btn-${t}`);
+                if (t === tipo) {
+                    btn.className = "px-5 py-2 rounded-full text-xs font-bold bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all";
+                } else {
+                    btn.className = "px-5 py-2 rounded-full text-xs font-bold bg-[#16181c] border border-white/10 text-gray-400 hover:border-white/30 transition-all";
+                }
+            });
+            window.renderizar();
+        }
+
+        window.copiarTexto = function(texto) {
+            if(!texto || texto === '---') return;
+            navigator.clipboard.writeText(texto).then(() => alert("Copiado!"));
+        }
+
+        // --- CORE DO SISTEMA ---
         window.renderizar = async function() {
             const lista = document.getElementById('lista-alunos');
             const termo = document.getElementById('busca').value.toLowerCase();
             
-            const { data, error } = await banco.from('alunos').select('*').order('vencimento', { ascending: true });
-
-            if (error) {
-                console.error(error);
-                lista.innerHTML = `<p class="text-center text-red-500">Erro: ${error.message}</p>`;
-                return;
+            // Se já tem dados na memória, usa eles para não ficar piscando, senão busca
+            if(alunos.length === 0) {
+                const { data, error } = await banco.from('alunos').select('*').order('vencimento', { ascending: true });
+                if (error) { console.error(error); return; }
+                alunos = data || [];
             }
 
-            alunos = data || [];
             lista.innerHTML = '';
-            
-            if (alunos.length === 0) {
-                lista.innerHTML = `<p class="text-center text-gray-600 mt-10">Nenhum aluno cadastrado.</p>`;
-                return;
-            }
-
             let totalReceita = 0, contaAtivos = 0, contaVencidos = 0;
-            
-            alunos.forEach(aluno => {
-                if (!aluno.nome.toLowerCase().includes(termo)) return;
+            const hoje = new Date(); hoje.setHours(0,0,0,0);
 
-                const hoje = new Date();
-                hoje.setHours(0,0,0,0);
+            // Cálculos para a Barra de Progresso
+            const META_ALUNOS = 150; // Defina sua próxima meta aqui
+            const totalAlunos = alunos.length;
+            const porcentagem = Math.min((totalAlunos / META_ALUNOS) * 100, 100);
+            
+            document.getElementById('text-meta').innerText = META_ALUNOS;
+            document.getElementById('text-progresso').innerText = `${Math.round(porcentagem)}%`;
+            document.getElementById('bar-progresso').style.width = `${porcentagem}%`;
+
+            alunos.forEach(aluno => {
+                // Lógica de Vencimento
                 const partes = aluno.vencimento.split('-');
                 const dataVenc = new Date(partes[0], partes[1] - 1, partes[2]);
-                
                 const isVencido = hoje > dataVenc;
+                
+                // Contabilidade Geral (independente do filtro)
+                totalReceita += parseFloat(aluno.valor);
+                if(isVencido) contaVencidos++; else contaAtivos++;
+
+                // Filtros de Busca e Botões
+                if (!aluno.nome.toLowerCase().includes(termo)) return;
+                if (filtroAtivo === 'ativos' && isVencido) return;
+                if (filtroAtivo === 'vencidos' && !isVencido) return;
+
                 const diffTime = dataVenc - hoje;
                 const diasRestantes = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                if(isVencido) contaVencidos++; else contaAtivos++;
-                totalReceita += parseFloat(aluno.valor);
-
                 const borderClass = isVencido ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.15)] bg-red-500/5' : 'border-white/5';
                 const statusColor = isVencido ? 'text-red-500' : 'text-green-500';
                 const statusTexto = isVencido ? 'VENCIDO' : (diasRestantes === 0 ? 'VENCE HOJE' : `VENCE EM ${diasRestantes} DIAS`);
-
                 const dia = String(dataVenc.getDate()).padStart(2, '0');
                 const mes = String(dataVenc.getMonth() + 1).padStart(2, '0');
-
-                // Dados do App
                 const emailApp = aluno.email_app || '---';
                 const senhaApp = aluno.senha_app || '---';
-
-                // LÓGICA DE DISTRIBUIÇÃO DE PIX (RODIZIO BASEADO NO ID)
-                // Pega o ID, divide por 3 e vê o resto (0, 1 ou 2)
-                const indicePix = aluno.id % 3; 
-                const pixSelecionado = CHAVES_PIX[indicePix];
+                
+                // Rodízio Pix
+                const indicePix = aluno.id % 3;
+                const pix = CHAVES_PIX[indicePix];
 
                 const html = `
-                    <div class="glass p-5 rounded-[2rem] flex flex-col gap-4 border transition ${borderClass} fade-in">
-                        
+                    <div class="glass p-5 rounded-[2rem] flex flex-col gap-4 border transition ${borderClass} fade-in relative group">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center gap-4">
                                 <div class="w-14 h-14 rounded-2xl bg-[#16181c] flex flex-col items-center justify-center border border-white/10 shadow-inner">
@@ -218,32 +284,32 @@
                                     <h4 class="font-bold text-white text-lg leading-tight">${aluno.nome}</h4>
                                     <div class="flex items-center gap-2 mt-1">
                                         <span class="text-[10px] font-black uppercase ${statusColor} bg-black/40 px-2 py-1 rounded-lg border border-white/5">${statusTexto}</span>
-                                        <span class="text-[11px] text-gray-400 font-bold">R$ ${parseFloat(aluno.valor).toFixed(2)}</span>
+                                        <span class="text-[11px] text-gray-400 font-bold sensitive">R$ ${parseFloat(aluno.valor).toFixed(2)}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="bg-black/30 rounded-xl p-3 border border-white/5 flex flex-col gap-2">
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center group/app">
                                 <div class="flex items-center gap-2 overflow-hidden">
                                     <i class="fas fa-envelope text-purple-400 text-xs"></i>
-                                    <span class="text-xs text-gray-300 font-mono truncate">${emailApp}</span>
+                                    <span class="text-xs text-gray-300 font-mono truncate sensitive">${emailApp}</span>
                                 </div>
-                                <button onclick="window.copiarTexto('${emailApp}')" class="text-gray-500 hover:text-white px-2"><i class="fas fa-copy text-xs"></i></button>
+                                <button onclick="window.copiarTexto('${emailApp}')" class="text-gray-600 hover:text-white px-2 transition"><i class="fas fa-copy text-xs"></i></button>
                             </div>
                             <div class="h-[1px] bg-white/5 w-full"></div>
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center group/app">
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-key text-purple-400 text-xs"></i>
-                                    <span class="text-xs text-gray-300 font-mono">${senhaApp}</span>
+                                    <span class="text-xs text-gray-300 font-mono sensitive">${senhaApp}</span>
                                 </div>
-                                <button onclick="window.copiarTexto('${senhaApp}')" class="text-gray-500 hover:text-white px-2"><i class="fas fa-copy text-xs"></i></button>
+                                <button onclick="window.copiarTexto('${senhaApp}')" class="text-gray-600 hover:text-white px-2 transition"><i class="fas fa-copy text-xs"></i></button>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-4 gap-2 pt-2 border-t border-white/5 mt-1">
-                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, pixSelecionado.chave, pixSelecionado.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-green-600 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
+                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, pix.chave, pix.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-white/5 hover:bg-green-600 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
                             <button onclick="window.renovarAluno(${aluno.id}, '${aluno.vencimento}', '${aluno.nome}')" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-blue-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-sync-alt"></i></button>
                             <button onclick="window.editarAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-purple-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-pen"></i></button>
                             <button onclick="window.removerAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-white/5 hover:bg-red-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-trash"></i></button>
@@ -253,11 +319,10 @@
                 lista.innerHTML += html;
             });
 
-            document.getElementById('stat-ativos').innerText = contaAtivos;
-            document.getElementById('stat-vencidos').innerText = contaVencidos;
             document.getElementById('stat-receita').innerText = totalReceita.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
+        // --- OPERAÇÕES DE BANCO ---
         window.salvarAluno = async function() {
             const id = document.getElementById('edit-id').value;
             const nome = document.getElementById('input-nome').value.toUpperCase();
@@ -271,30 +336,23 @@
 
             const btn = document.querySelector('#modal button');
             const originalText = btn.innerHTML;
-            btn.innerHTML = 'Salvando...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
             btn.disabled = true;
 
             try {
-                let error;
                 const dados = { nome, telefone, valor, vencimento, email_app, senha_app };
-
+                let error;
                 if (id) {
-                    const res = await banco.from('alunos').update(dados).eq('id', id);
-                    error = res.error;
+                    const res = await banco.from('alunos').update(dados).eq('id', id); error = res.error;
                 } else {
-                    const res = await banco.from('alunos').insert([dados]);
-                    error = res.error;
+                    const res = await banco.from('alunos').insert([dados]); error = res.error;
                 }
-
                 if (error) throw error;
+                alunos = []; // Força recarregar do banco para atualizar ID e Barra
                 window.fecharModal();
                 window.renderizar();
-            } catch (err) {
-                alert("Erro ao salvar: " + err.message);
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
+            } catch (err) { alert("Erro: " + err.message); } 
+            finally { btn.innerHTML = originalText; btn.disabled = false; }
         }
 
         window.renovarAluno = async function(id, dataStr, nome) {
@@ -304,13 +362,15 @@
             data.setMonth(data.getMonth() + 1);
             const novaData = data.toISOString().split('T')[0];
             const { error } = await banco.from('alunos').update({ vencimento: novaData }).eq('id', id);
-            if(error) alert(error.message); else window.renderizar();
+            if(error) alert(error.message); 
+            else { alunos = []; window.renderizar(); }
         }
 
         window.removerAluno = async function(id) {
-            if(confirm("Apagar aluno?")) {
+            if(confirm("Apagar aluno permanentemente?")) {
                 const { error } = await banco.from('alunos').delete().eq('id', id);
-                if(error) alert(error.message); else window.renderizar();
+                if(error) alert(error.message); 
+                else { alunos = []; window.renderizar(); }
             }
         }
 
@@ -319,42 +379,21 @@
             if(!aluno) return;
             document.getElementById('modal-titulo').innerText = "Editar Aluno";
             document.getElementById('edit-id').value = aluno.id;
-            
-            // Preenche Campos
             document.getElementById('input-nome').value = aluno.nome;
             document.getElementById('input-telefone').value = aluno.telefone;
             document.getElementById('input-valor').value = aluno.valor;
             document.getElementById('input-vencimento').value = aluno.vencimento;
             document.getElementById('input-email-app').value = aluno.email_app || '';
             document.getElementById('input-senha-app').value = aluno.senha_app || '';
-
             window.abrirModal();
         }
 
-        window.abrirModal = function() { 
-            document.getElementById('modal').classList.remove('hidden'); 
-            if(document.getElementById('modal-titulo').innerText !== "Editar Aluno") { 
-                limparForm();
-            } 
-        }
-        
-        window.fecharModal = function() { 
-            document.getElementById('modal').classList.add('hidden'); 
-            setTimeout(() => { 
-                document.getElementById('modal-titulo').innerText="Novo Aluno"; 
-                document.getElementById('edit-id').value=""; 
-                limparForm();
-            }, 300); 
-        }
-
+        window.abrirModal = function() { document.getElementById('modal').classList.remove('hidden'); if(document.getElementById('modal-titulo').innerText !== "Editar Aluno") limparForm(); }
+        window.fecharModal = function() { document.getElementById('modal').classList.add('hidden'); setTimeout(() => { document.getElementById('modal-titulo').innerText="Novo Aluno"; document.getElementById('edit-id').value=""; limparForm(); }, 300); }
         function limparForm() {
-            document.getElementById('edit-id').value = "";
-            document.getElementById('input-nome').value = "";
-            document.getElementById('input-telefone').value = "";
-            document.getElementById('input-valor').value = "";
-            document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0];
-            document.getElementById('input-email-app').value = "";
-            document.getElementById('input-senha-app').value = "";
+            document.getElementById('edit-id').value = ""; document.getElementById('input-nome').value = ""; document.getElementById('input-telefone').value = "";
+            document.getElementById('input-valor').value = ""; document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0];
+            document.getElementById('input-email-app').value = ""; document.getElementById('input-senha-app').value = "";
         }
 
         window.renderizar();
