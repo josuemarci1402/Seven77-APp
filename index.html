@@ -3,59 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEVEN77 | Ultimate OS</title>
+    <title>SEVEN77 | Lite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #8b5cf6; --dark: #050507; }
+        :root { --bg: #09090b; --card: #18181b; --primary: #8b5cf6; }
         body { 
-            background: var(--dark); 
+            background: var(--bg); 
             color: white; 
             font-family: 'Outfit', sans-serif; 
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-        .aurora-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background: linear-gradient(125deg, #050507 0%, #1a1033 50%, #050507 100%);
-            background-size: 200% 200%;
-            animation: aurora 15s ease infinite;
+
+        /* Tira todas as animações pesadas */
+        .solid-card {
+            background: var(--card);
+            border: 1px solid #27272a;
         }
-        @keyframes aurora { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .glass { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); transition: all 0.2s; }
-        .pin-dot.filled { background: white; border-color: white; box-shadow: 0 0 10px white; }
+
+        .pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #52525b; }
+        .pin-dot.filled { background: white; border-color: white; }
+        
         .num-pad-btn { 
             width: 70px; height: 70px; border-radius: 50%; 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            background: #27272a; 
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 600; transition: all 0.1s;
+            font-size: 24px; font-weight: 600;
         }
-        .num-pad-btn:active { background: rgba(255,255,255,0.2); transform: scale(0.95); }
+        .num-pad-btn:active { background: #3f3f46; }
+
+        input, textarea { background: #27272a !important; border: 1px solid #3f3f46 !important; }
+        input:focus, textarea:focus { border-color: #8b5cf6 !important; }
+
         ::-webkit-scrollbar { width: 0px; }
-        .blur-mode .sensitive { filter: blur(8px); transition: filter 0.3s; }
+        .blur-mode .sensitive { filter: blur(8px); }
         .blur-mode .sensitive:hover { filter: blur(0px); }
     </style>
 </head>
 <body class="selection:bg-purple-500 selection:text-white">
 
-    <div class="aurora-bg"></div>
-
-    <div id="lock-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050507] transition-all duration-700">
-        <div class="mb-8 flex flex-col items-center animate-pulse">
-            <div class="w-16 h-16 bg-gradient-to-br from-[#6366f1] to-[#a855f7] rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.5)] mb-4">
-                <i class="fas fa-dumbbell text-white text-2xl"></i>
+    <div id="lock-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#09090b]">
+        <div class="mb-8 flex flex-col items-center">
+            <div class="w-16 h-16 bg-[#18181b] rounded-2xl flex items-center justify-center border border-[#27272a] mb-4">
+                <i class="fas fa-dumbbell text-purple-500 text-2xl"></i>
             </div>
-            <h1 class="text-2xl font-black tracking-widest uppercase text-white/80">Seven77</h1>
+            <h1 class="text-2xl font-black tracking-widest uppercase text-white">Seven77</h1>
         </div>
         <div class="flex gap-4 mb-10">
             <div class="pin-dot" id="dot-1"></div>
@@ -77,119 +71,114 @@
             <button class="num-pad-btn" onclick="addPin(0)">0</button>
             <button class="num-pad-btn text-base" onclick="clearPin()"><i class="fas fa-backspace"></i></button>
         </div>
-        <p class="text-xs text-gray-500 mt-8 uppercase tracking-widest font-bold">Digite a Senha</p>
+        <p class="text-xs text-gray-500 mt-8 uppercase tracking-widest font-bold">Senha de Acesso</p>
     </div>
 
-    <div id="app-content" class="p-4 md:p-8 max-w-2xl mx-auto pb-32 opacity-0 transition-opacity duration-1000 hidden">
+    <div id="app-content" class="p-4 md:p-8 max-w-2xl mx-auto pb-32 hidden">
         
-        <div class="flex justify-between items-center mb-8 slide-up" style="animation-delay: 0.1s;">
+        <div class="flex justify-between items-center mb-8">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#6366f1] to-[#a855f7] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] border border-white/10">
-                    <i class="fas fa-dumbbell text-white text-2xl"></i>
+                <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-dumbbell text-white text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-black italic tracking-tighter text-white leading-none">SEVEN77</h1>
-                    <p class="text-[10px] text-purple-300 font-bold tracking-[0.2em] uppercase mt-1">Gestão Pro</p>
+                    <h1 class="text-2xl font-black italic tracking-tighter text-white leading-none">SEVEN77</h1>
+                    <p class="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase mt-1">Gestão Pro</p>
                 </div>
             </div>
             
             <div class="flex gap-2">
-                <button onclick="alternarPrivacidade()" class="w-11 h-11 glass rounded-2xl flex items-center justify-center hover:bg-white/10 transition text-gray-400 hover:text-white" title="Privacidade">
+                <button onclick="alternarPrivacidade()" class="w-10 h-10 solid-card rounded-xl flex items-center justify-center text-gray-400">
                     <i class="fas fa-eye" id="icon-eye"></i>
                 </button>
-                <button onclick="exportarBackup()" class="w-11 h-11 glass rounded-2xl flex items-center justify-center hover:bg-green-500/20 transition text-gray-400 hover:text-green-400" title="Backup">
+                <button onclick="exportarBackup()" class="w-10 h-10 solid-card rounded-xl flex items-center justify-center text-gray-400">
                     <i class="fas fa-cloud-download-alt"></i>
                 </button>
-                <button onclick="window.abrirModal()" class="w-14 h-14 bg-white text-black rounded-2xl flex items-center justify-center hover:scale-105 transition shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                <button onclick="window.abrirModal()" class="w-12 h-12 bg-white text-black rounded-xl flex items-center justify-center">
                     <i class="fas fa-plus text-xl"></i>
                 </button>
             </div>
         </div>
 
-        <div class="glass p-8 rounded-[3rem] mb-8 relative overflow-hidden slide-up" style="animation-delay: 0.2s;">
-            <div class="absolute top-0 right-0 w-80 h-80 bg-purple-600/20 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
-            
-            <div class="relative z-10">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Receita Estimada</p>
-                        <h3 id="stat-receita" class="text-5xl font-black tracking-tight text-white sensitive">R$ 0,00</h3>
-                    </div>
-                    <div class="w-12 h-12 rounded-full bg-green-400/10 flex items-center justify-center text-green-400 border border-green-400/20">
-                        <i class="fas fa-arrow-trend-up text-xl"></i>
-                    </div>
+        <div class="solid-card p-6 rounded-[2rem] mb-6">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Receita Estimada</p>
+                    <h3 id="stat-receita" class="text-4xl font-black tracking-tight text-white sensitive">R$ 0,00</h3>
                 </div>
-
-                <div class="flex justify-between items-end mb-2">
-                    <span class="text-xs font-bold text-purple-300">Nível <span id="text-nivel">1</span></span>
-                    <span id="text-progresso" class="text-xs font-bold text-white">0 Alunos</span>
+                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 border border-green-500/20">
+                    <i class="fas fa-arrow-trend-up"></i>
                 </div>
-                <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                    <div id="bar-progresso" class="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_#a855f7]" style="width: 0%"></div>
-                </div>
-                <p class="text-[10px] text-gray-500 mt-2 text-right">Meta: <span id="text-meta">100</span> alunos</p>
             </div>
+
+            <div class="flex justify-between items-end mb-2">
+                <span class="text-xs font-bold text-gray-400">Progresso</span>
+                <span id="text-progresso" class="text-xs font-bold text-white">0 Alunos</span>
+            </div>
+            <div class="w-full bg-[#27272a] rounded-full h-2 overflow-hidden">
+                <div id="bar-progresso" class="bg-purple-600 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-2 text-right">Meta: <span id="text-meta">150</span> alunos</p>
         </div>
 
-        <div class="flex gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide slide-up" style="animation-delay: 0.3s;">
-            <button onclick="filtrar('todos')" id="btn-todos" class="px-6 py-3 rounded-2xl text-xs font-bold bg-white text-black shadow-lg transition-transform hover:scale-105 whitespace-nowrap">
+        <div class="flex gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+            <button onclick="filtrar('todos')" id="btn-todos" class="px-5 py-3 rounded-xl text-xs font-bold bg-white text-black whitespace-nowrap">
                 Todos <span id="count-todos" class="ml-1 opacity-50">0</span>
             </button>
-            <button onclick="filtrar('ativos')" id="btn-ativos" class="px-6 py-3 rounded-2xl text-xs font-bold glass text-gray-400 hover:text-green-400 hover:border-green-500/30 transition-all whitespace-nowrap">
+            <button onclick="filtrar('ativos')" id="btn-ativos" class="px-5 py-3 rounded-xl text-xs font-bold solid-card text-gray-400 whitespace-nowrap">
                 Em Dia <span id="count-ativos" class="ml-1 opacity-50">0</span>
             </button>
-            <button onclick="filtrar('vencidos')" id="btn-vencidos" class="px-6 py-3 rounded-2xl text-xs font-bold glass text-gray-400 hover:text-red-400 hover:border-red-500/30 transition-all whitespace-nowrap">
+            <button onclick="filtrar('vencidos')" id="btn-vencidos" class="px-5 py-3 rounded-xl text-xs font-bold solid-card text-gray-400 whitespace-nowrap">
                 Vencidos <span id="count-vencidos" class="ml-1 opacity-50">0</span>
             </button>
         </div>
 
-        <div class="mb-8 relative group slide-up" style="animation-delay: 0.4s;">
-            <input type="text" id="busca" oninput="window.renderizar()" placeholder="Pesquisar aluno..." class="w-full bg-black/20 backdrop-blur-md border border-white/10 p-5 pl-14 rounded-3xl outline-none text-white focus:border-purple-500/50 transition shadow-inner placeholder-gray-600">
-            <i class="fas fa-search absolute left-6 top-6 text-gray-500 group-focus-within:text-purple-500 transition text-lg"></i>
+        <div class="mb-6">
+            <input type="text" id="busca" oninput="window.renderizar()" placeholder="Pesquisar aluno..." class="w-full bg-[#18181b] border border-[#27272a] p-4 pl-4 rounded-xl outline-none text-white text-sm">
         </div>
 
-        <div id="lista-alunos" class="space-y-5 pb-24 slide-up" style="animation-delay: 0.5s;">
-            </div>
-
+        <div id="lista-alunos" class="space-y-4 pb-24">
+            <p class="text-center text-gray-500 mt-10 text-sm">Carregando...</p>
+        </div>
     </div>
 
-    <div id="modal" class="fixed inset-0 bg-black/95 backdrop-blur-xl hidden z-[200] flex items-center justify-center p-4 transition-all duration-300">
-        <div class="bg-[#101216] w-full max-w-md p-8 rounded-[3rem] border border-white/10 shadow-2xl relative overflow-y-auto max-h-[90vh]">
-            <button onclick="window.fecharModal()" class="absolute top-8 right-8 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-500 hover:bg-white hover:text-black transition"><i class="fas fa-times"></i></button>
-            <h2 id="modal-titulo" class="text-3xl font-black mb-1 text-white tracking-tight">Novo Aluno</h2>
-            <p class="text-sm text-gray-500 mb-8 font-medium">Preencha as informações abaixo.</p>
+    <div id="modal" class="fixed inset-0 bg-black/95 hidden z-[200] flex items-center justify-center p-4">
+        <div class="bg-[#09090b] w-full max-w-md p-6 rounded-[2rem] border border-[#27272a] relative overflow-y-auto max-h-[90vh]">
+            <button onclick="window.fecharModal()" class="absolute top-6 right-6 text-gray-500"><i class="fas fa-times text-xl"></i></button>
+            
+            <h2 id="modal-titulo" class="text-2xl font-black mb-1 text-white">Novo Aluno</h2>
+            <p class="text-xs text-gray-500 mb-6 uppercase tracking-widest">Ficha Cadastral</p>
+            
             <input type="hidden" id="edit-id">
-            <div class="space-y-5">
-                <div class="group">
-                    <label class="text-[10px] text-gray-500 font-bold ml-4 mb-2 block tracking-widest uppercase">Nome Completo</label>
-                    <input type="text" id="input-nome" class="w-full bg-black/40 p-5 rounded-3xl outline-none border border-white/5 text-white focus:border-purple-500 focus:bg-purple-500/5 transition">
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] text-gray-500 font-bold ml-2 uppercase">Nome</label>
+                    <input type="text" id="input-nome" class="w-full p-4 rounded-xl text-white outline-none">
                 </div>
-                <div class="group">
-                    <label class="text-[10px] text-gray-500 font-bold ml-4 mb-2 block tracking-widest uppercase">WhatsApp</label>
-                    <input type="tel" id="input-telefone" class="w-full bg-black/40 p-5 rounded-3xl outline-none border border-white/5 text-white focus:border-purple-500 focus:bg-purple-500/5 transition">
+                <div>
+                    <label class="text-[10px] text-gray-500 font-bold ml-2 uppercase">WhatsApp</label>
+                    <input type="tel" id="input-telefone" class="w-full p-4 rounded-xl text-white outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] text-gray-500 font-bold ml-4 mb-2 block tracking-widest uppercase">Valor</label>
-                        <input type="number" id="input-valor" class="w-full bg-black/40 p-5 rounded-3xl outline-none border border-white/5 text-white focus:border-purple-500 focus:bg-purple-500/5 transition text-center font-bold text-lg">
+                        <label class="text-[10px] text-gray-500 font-bold ml-2 uppercase">Valor</label>
+                        <input type="number" id="input-valor" class="w-full p-4 rounded-xl text-white text-center font-bold outline-none">
                     </div>
                     <div>
-                        <label class="text-[10px] text-gray-500 font-bold ml-4 mb-2 block tracking-widest uppercase">Vencimento</label>
-                        <input type="date" id="input-vencimento" class="w-full bg-black/40 p-5 rounded-3xl outline-none border border-white/5 text-white focus:border-purple-500 focus:bg-purple-500/5 transition text-center text-sm font-bold">
+                        <label class="text-[10px] text-gray-500 font-bold ml-2 uppercase">Vencimento</label>
+                        <input type="date" id="input-vencimento" class="w-full p-4 rounded-xl text-white text-center outline-none">
                     </div>
                 </div>
-                <div class="bg-white/5 rounded-3xl p-5 border border-white/5">
-                    <p class="text-xs text-purple-300 font-bold uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fas fa-layer-group"></i> Detalhes Extras</p>
+                <div class="bg-[#18181b] rounded-xl p-4 border border-[#27272a]">
+                    <p class="text-[10px] text-purple-500 font-bold uppercase tracking-widest mb-3">Detalhes Extras</p>
                     <div class="space-y-3">
-                        <input type="text" id="input-email-app" placeholder="Login / E-mail do App" class="w-full bg-black/20 p-4 rounded-2xl outline-none border border-white/5 text-sm text-white focus:border-purple-500/50 transition">
-                        <input type="text" id="input-senha-app" placeholder="Senha do App" class="w-full bg-black/20 p-4 rounded-2xl outline-none border border-white/5 text-sm text-white focus:border-purple-500/50 transition">
-                        <textarea id="input-notas" placeholder="Observações" class="w-full bg-black/20 p-4 rounded-2xl outline-none border border-white/5 text-sm text-white focus:border-purple-500/50 transition h-24 resize-none"></textarea>
+                        <input type="text" id="input-email-app" placeholder="Login / E-mail do App" class="w-full p-3 rounded-lg text-sm text-white outline-none">
+                        <input type="text" id="input-senha-app" placeholder="Senha do App" class="w-full p-3 rounded-lg text-sm text-white outline-none">
+                        <textarea id="input-notas" placeholder="Observações" class="w-full p-3 rounded-lg text-sm text-white h-20 resize-none outline-none"></textarea>
                     </div>
                 </div>
             </div>
-            <button onclick="window.salvarAluno()" class="w-full bg-white text-black p-5 rounded-3xl font-black text-lg shadow-[0_0_30px_rgba(255,255,255,0.2)] mt-8 hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2">
-                Salvar Cadastro <i class="fas fa-arrow-right"></i>
-            </button>
+            <button onclick="window.salvarAluno()" class="w-full bg-white text-black p-4 rounded-xl font-bold mt-6 shadow-lg">Salvar Cadastro</button>
         </div>
     </div>
 
@@ -203,11 +192,10 @@
         let alunos = [];
         let filtroAtivo = 'todos';
         
-        // SENHA DE BLOQUEIO
+        // SENHA: 1403
         const SENHA_MESTRA = "1403"; 
         let pinAtual = "";
 
-        // PIN
         window.addPin = function(num) {
             if(pinAtual.length < 4) { pinAtual += num; atualizarDots(); if(pinAtual.length === 4) verificarPin(); }
         }
@@ -224,11 +212,9 @@
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('app-content').classList.remove('hidden');
-                    setTimeout(() => document.getElementById('app-content').style.opacity = '1', 100);
-                }, 700);
+                }, 300);
             } else {
-                const lock = document.getElementById('lock-screen'); lock.classList.add('animate-pulse');
-                setTimeout(() => { lock.classList.remove('animate-pulse'); pinAtual = ""; atualizarDots(); alert("Senha Incorreta"); }, 300);
+                pinAtual = ""; atualizarDots(); alert("Senha Incorreta");
             }
         }
 
@@ -244,7 +230,7 @@
         window.alternarPrivacidade = function() {
             document.body.classList.toggle('blur-mode');
             const icon = document.getElementById('icon-eye');
-            icon.className = document.body.classList.contains('blur-mode') ? "fas fa-eye-slash text-purple-400" : "fas fa-eye";
+            icon.className = document.body.classList.contains('blur-mode') ? "fas fa-eye-slash text-purple-500" : "fas fa-eye";
         }
 
         window.exportarBackup = function() {
@@ -258,8 +244,8 @@
             filtroAtivo = tipo;
             ['todos', 'ativos', 'vencidos'].forEach(t => {
                 const btn = document.getElementById(`btn-${t}`);
-                if (t === tipo) btn.className = "px-6 py-3 rounded-2xl text-xs font-bold bg-white text-black shadow-lg transition-transform scale-105 whitespace-nowrap";
-                else btn.className = "px-6 py-3 rounded-2xl text-xs font-bold glass text-gray-400 hover:text-white transition-all whitespace-nowrap";
+                if (t === tipo) btn.className = "px-5 py-3 rounded-xl text-xs font-bold bg-white text-black whitespace-nowrap";
+                else btn.className = "px-5 py-3 rounded-xl text-xs font-bold solid-card text-gray-400 whitespace-nowrap";
             });
             window.renderizar();
         }
@@ -284,7 +270,6 @@
             const hoje = new Date(); hoje.setHours(0,0,0,0);
             const META_ALUNOS = 150; 
             
-            // CONTAGEM GERAL (PARA OS BOTÕES)
             alunos.forEach(a => {
                 const partes = a.vencimento.split('-');
                 const v = new Date(partes[0], partes[1] - 1, partes[2]);
@@ -292,18 +277,14 @@
                 totalReceita += parseFloat(a.valor);
             });
 
-            // Atualiza Interface de Metas e Botões
             document.getElementById('text-meta').innerText = META_ALUNOS;
-            document.getElementById('text-progresso').innerText = `${alunos.length} / ${META_ALUNOS} Alunos`; // NOVO!
+            document.getElementById('text-progresso').innerText = `${alunos.length} / ${META_ALUNOS} Alunos`;
             document.getElementById('bar-progresso').style.width = `${Math.min((alunos.length / META_ALUNOS) * 100, 100)}%`;
             document.getElementById('stat-receita').innerText = totalReceita.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            // Atualiza Contadores nos Botões
             document.getElementById('count-todos').innerText = alunos.length;
             document.getElementById('count-ativos').innerText = contaAtivos;
             document.getElementById('count-vencidos').innerText = contaVencidos;
 
-            // Renderiza Lista Filtrada
             alunos.forEach(aluno => {
                 const partes = aluno.vencimento.split('-');
                 const dataVenc = new Date(partes[0], partes[1] - 1, partes[2]);
@@ -315,57 +296,59 @@
 
                 const diffTime = dataVenc - hoje;
                 const diasRestantes = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                const borderClass = isVencido ? 'border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 'border-white/5';
+                const borderClass = isVencido ? 'border-red-500/50' : 'border-[#27272a]';
                 const statusColor = isVencido ? 'text-red-400' : 'text-green-400';
                 const statusTexto = isVencido ? 'VENCIDO' : (diasRestantes === 0 ? 'VENCE HOJE' : `${diasRestantes} DIAS`);
                 
                 const emailApp = aluno.email_app || '---';
                 const senhaApp = aluno.senha_app || '---';
-                const notas = aluno.notas ? `<div class="mt-2 text-[10px] text-yellow-500/80 italic"><i class="fas fa-sticky-note mr-1"></i> ${aluno.notas}</div>` : '';
+                const notas = aluno.notas ? `<div class="mt-2 text-[10px] text-yellow-500 italic"><i class="fas fa-sticky-note mr-1"></i> ${aluno.notas}</div>` : '';
 
                 const indicePix = aluno.id % 3;
                 const pix = CHAVES_PIX[indicePix];
 
                 const html = `
-                    <div class="glass p-6 rounded-[2.5rem] flex flex-col gap-4 border transition ${borderClass} fade-in relative group hover:bg-white/5">
+                    <div class="solid-card p-5 rounded-[2rem] flex flex-col gap-4 ${borderClass}">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center gap-5">
-                                <div class="w-16 h-16 rounded-3xl bg-[#101216] flex flex-col items-center justify-center border border-white/10 shadow-inner">
-                                    <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Dia</span>
-                                    <span class="text-2xl font-black text-white leading-none">${String(dataVenc.getDate()).padStart(2, '0')}</span>
+                                <div class="w-14 h-14 rounded-2xl bg-[#09090b] flex flex-col items-center justify-center border border-[#27272a]">
+                                    <span class="text-[9px] text-gray-500 font-bold uppercase">Dia</span>
+                                    <span class="text-xl font-black text-white leading-none">${String(dataVenc.getDate()).padStart(2, '0')}</span>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-white text-xl leading-tight">${aluno.nome}</h4>
-                                    <div class="flex items-center gap-3 mt-2">
-                                        <span class="text-[10px] font-black uppercase ${statusColor} bg-black/40 px-3 py-1 rounded-full border border-white/5 tracking-wider">${statusTexto}</span>
+                                    <h4 class="font-bold text-white text-lg leading-tight">${aluno.nome}</h4>
+                                    <div class="flex items-center gap-3 mt-1">
+                                        <span class="text-[10px] font-black uppercase ${statusColor} bg-black/20 px-2 py-1 rounded-lg border border-[#27272a]">${statusTexto}</span>
                                         <span class="text-xs text-gray-300 font-bold sensitive">R$ ${parseFloat(aluno.valor).toFixed(2)}</span>
                                     </div>
                                     ${notas}
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-black/30 rounded-2xl p-4 border border-white/5 flex flex-col gap-3">
-                            <div class="flex justify-between items-center group/app">
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-xs"><i class="fas fa-user"></i></div>
+
+                        <div class="bg-[#09090b] rounded-xl p-3 border border-[#27272a] flex flex-col gap-2">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2 overflow-hidden">
+                                    <i class="fas fa-user text-purple-500 text-xs"></i>
                                     <span class="text-xs text-gray-300 font-mono truncate sensitive">${emailApp}</span>
                                 </div>
-                                <button onclick="window.copiarTexto('${emailApp}')" class="text-gray-600 hover:text-white px-2 transition"><i class="fas fa-copy"></i></button>
+                                <button onclick="window.copiarTexto('${emailApp}')" class="text-gray-500 hover:text-white px-2"><i class="fas fa-copy text-xs"></i></button>
                             </div>
-                            <div class="h-[1px] bg-white/5 w-full"></div>
-                            <div class="flex justify-between items-center group/app">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-xs"><i class="fas fa-key"></i></div>
+                            <div class="h-[1px] bg-[#27272a] w-full"></div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-key text-purple-500 text-xs"></i>
                                     <span class="text-xs text-gray-300 font-mono sensitive">${senhaApp}</span>
                                 </div>
-                                <button onclick="window.copiarTexto('${senhaApp}')" class="text-gray-600 hover:text-white px-2 transition"><i class="fas fa-copy"></i></button>
+                                <button onclick="window.copiarTexto('${senhaApp}')" class="text-gray-500 hover:text-white px-2"><i class="fas fa-copy text-xs"></i></button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-4 gap-3 pt-2 border-t border-white/5 mt-1">
-                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, pix.chave, pix.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-12 rounded-2xl flex items-center justify-center bg-white/5 hover:bg-green-600 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-xl"></i></a>
-                            <button onclick="window.renovarAluno(${aluno.id}, '${aluno.vencimento}', '${aluno.nome}')" class="col-span-1 h-12 rounded-2xl bg-white/5 hover:bg-blue-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-sync-alt"></i></button>
-                            <button onclick="window.editarAluno(${aluno.id})" class="col-span-1 h-12 rounded-2xl bg-white/5 hover:bg-purple-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-pen"></i></button>
-                            <button onclick="window.removerAluno(${aluno.id})" class="col-span-1 h-12 rounded-2xl bg-white/5 hover:bg-red-600 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-trash"></i></button>
+
+                        <div class="grid grid-cols-4 gap-2 pt-2 border-t border-[#27272a] mt-1">
+                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, pix.chave, pix.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-[#27272a] hover:bg-green-900 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
+                            <button onclick="window.renovarAluno(${aluno.id}, '${aluno.vencimento}', '${aluno.nome}')" class="col-span-1 h-10 rounded-xl bg-[#27272a] hover:bg-blue-900 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-sync-alt"></i></button>
+                            <button onclick="window.editarAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-[#27272a] hover:bg-purple-900 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-pen"></i></button>
+                            <button onclick="window.removerAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-[#27272a] hover:bg-red-900 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -383,7 +366,7 @@
             const senha_app = document.getElementById('input-senha-app').value;
             const notas = document.getElementById('input-notas').value;
 
-            if (!nome || !valor || !vencimento) return alert("Preencha os campos obrigatórios!");
+            if (!nome || !valor || !vencimento) return alert("Preencha os campos!");
             const btn = document.querySelector('#modal button');
             const txt = btn.innerHTML; btn.innerHTML = 'Salvando...'; btn.disabled = true;
 
@@ -430,13 +413,8 @@
             window.abrirModal();
         }
 
-        window.abrirModal = function() { document.getElementById('modal').classList.remove('hidden'); if(document.getElementById('modal-titulo').innerText !== "Editar Aluno") limparForm(); }
-        window.fecharModal = function() { document.getElementById('modal').classList.add('hidden'); setTimeout(() => { document.getElementById('modal-titulo').innerText="Novo Aluno"; document.getElementById('edit-id').value=""; limparForm(); }, 300); }
-        function limparForm() {
-            document.getElementById('edit-id').value = ""; document.getElementById('input-nome').value = ""; document.getElementById('input-telefone').value = "";
-            document.getElementById('input-valor').value = ""; document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0];
-            document.getElementById('input-email-app').value = ""; document.getElementById('input-senha-app').value = ""; document.getElementById('input-notas').value = "";
-        }
+        window.abrirModal = function() { document.getElementById('modal').classList.remove('hidden'); if(document.getElementById('modal-titulo').innerText !== "Editar Aluno") { document.getElementById('edit-id').value=""; document.getElementById('input-nome').value=""; document.getElementById('input-telefone').value=""; document.getElementById('input-valor').value=""; document.getElementById('input-vencimento').value = new Date().toISOString().split('T')[0]; document.getElementById('input-email-app').value=""; document.getElementById('input-senha-app').value=""; document.getElementById('input-notas').value=""; } }
+        window.fecharModal = function() { document.getElementById('modal').classList.add('hidden'); setTimeout(() => { document.getElementById('modal-titulo').innerText="Novo Aluno"; document.getElementById('edit-id').value=""; }, 300); }
 
         window.renderizar();
     </script>
