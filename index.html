@@ -17,7 +17,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Tira todas as animações pesadas */
         .solid-card {
             background: var(--card);
             border: 1px solid #27272a;
@@ -192,7 +191,6 @@
         let alunos = [];
         let filtroAtivo = 'todos';
         
-        // SENHA: 1403
         const SENHA_MESTRA = "1403"; 
         let pinAtual = "";
 
@@ -218,10 +216,8 @@
             }
         }
 
-        const CHAVES_PIX = [
-            { chave: "(31)99163-9752", nome: "JOSUE" },
-            
-        ];
+        // CHAVE FIXA DEFINIDA AQUI
+        const PIX_UNICO = { chave: "(31)99163-9752", nome: "JOSUE" };
 
         const msgCobrar = (nome, chave, beneficiario) => encodeURIComponent(`⚠️ Atenção ${nome} ⚠️\n\nSua mensalidade está em aberto.\nPara evitar bloqueio, pague agora.\n\n💳 Pix: ${chave}\n👤 ${beneficiario}\n\nEnvie o comprovante aqui!\nEqpSeven🛸`);
         const msgOla = (nome) => encodeURIComponent(`Olá ${nome}, tudo bem? 🛸\nPassando para saber como estão os treinos!`);
@@ -303,9 +299,6 @@
                 const senhaApp = aluno.senha_app || '---';
                 const notas = aluno.notas ? `<div class="mt-2 text-[10px] text-yellow-500 italic"><i class="fas fa-sticky-note mr-1"></i> ${aluno.notas}</div>` : '';
 
-                const indicePix = aluno.id % 3;
-                const pix = CHAVES_PIX[indicePix];
-
                 const html = `
                     <div class="solid-card p-5 rounded-[2rem] flex flex-col gap-4 ${borderClass}">
                         <div class="flex justify-between items-start">
@@ -344,7 +337,7 @@
                         </div>
 
                         <div class="grid grid-cols-4 gap-2 pt-2 border-t border-[#27272a] mt-1">
-                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, pix.chave, pix.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-[#27272a] hover:bg-green-900 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
+                            <a href="https://wa.me/55${aluno.telefone}?text=${isVencido ? msgCobrar(aluno.nome, PIX_UNICO.chave, PIX_UNICO.nome) : msgOla(aluno.nome)}" target="_blank" class="col-span-1 h-10 rounded-xl flex items-center justify-center bg-[#27272a] hover:bg-green-900 transition text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-lg"></i></a>
                             <button onclick="window.renovarAluno(${aluno.id}, '${aluno.vencimento}', '${aluno.nome}')" class="col-span-1 h-10 rounded-xl bg-[#27272a] hover:bg-blue-900 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-sync-alt"></i></button>
                             <button onclick="window.editarAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-[#27272a] hover:bg-purple-900 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-pen"></i></button>
                             <button onclick="window.removerAluno(${aluno.id})" class="col-span-1 h-10 rounded-xl bg-[#27272a] hover:bg-red-900 text-gray-400 hover:text-white transition flex items-center justify-center"><i class="fas fa-trash"></i></button>
